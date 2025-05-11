@@ -10,8 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome per icone -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Manifest per PWA -->
-    <link rel="manifest" href="/manifest.json">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -399,39 +397,6 @@
             </div>
         </div>
 
-        <!-- Modale per modificare un turno -->
-        <div id="editShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-                <h3 class="text-lg font-semibold mb-4">Modifica Turno</h3>
-                <div class="mb-4">
-                    <label for="editShiftSelect" class="block text-sm font-medium text-gray-700">Seleziona Turno</label>
-                    <select id="editShiftSelect" class="w-full p-2 border rounded-lg" onchange="loadShiftData()">
-                        <option value="">Seleziona un turno</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label for="editShiftName" class="block text-sm font-medium text-gray-700">Nome Turno (es. Mattina)</label>
-                    <input type="text" id="editShiftName" class="w-full p-2 border rounded-lg" placeholder="Inserisci nome turno">
-                </div>
-                <div class="mb-4">
-                    <label for="editShiftAbbreviation" class="block text-sm font-medium text-gray-700">Abbreviazione (es. M, opzionale)</label>
-                    <input type="text" id="editShiftAbbreviation" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione">
-                </div>
-                <div class="mb-4">
-                    <label for="editShiftHours" class="block text-sm font-medium text-gray-700">Ore</label>
-                    <input type="number" id="editShiftHours" class="w-full p-2 border rounded-lg" placeholder="Inserisci ore" step="0.01">
-                </div>
-                <div class="mb-4">
-                    <label for="editShiftColor" class="block text-sm font-medium text-gray-700">Colore Turno</label>
-                    <input type="color" id="editShiftColor" class="w-full h-10 p-1 border rounded-lg" value="#fef3c7">
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button onclick="closeEditShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
-                    <button onclick="saveEditedShift()" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salva</button>
-                </div>
-            </div>
-        </div>
-
         <!-- Modale per eliminare un turno -->
         <div id="deleteShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
@@ -445,6 +410,33 @@
                 <div class="flex justify-end space-x-2">
                     <button onclick="closeDeleteShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
                     <button onclick="deleteShift()" class="px-4 py-2 bg-red-600 text-white rounded-lg">Elimina</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale per modificare un turno -->
+        <div id="editShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+                <h3 class="text-lg font-semibold mb-4">Modifica Turno</h3>
+                <div class="mb-4">
+                    <label for="editShiftName" class="block text-sm font-medium text-gray-700">Nome Turno</label>
+                    <input type="text" id="editShiftName" class="w-full p-2 border rounded-lg" readonly>
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftAbbreviation" class="block text-sm font-medium text-gray-700">Abbreviazione (opzionale)</label>
+                    <input type="text" id="editShiftAbbreviation" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione">
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftHours" class="block text-sm font-medium text-gray-700">Ore</label>
+                    <input type="number" id="editShiftHours" class="w-full p-2 border rounded-lg" placeholder="Inserisci ore" step="0.01">
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftColor" class="block text-sm font-medium text-gray-700">Colore Turno</label>
+                    <input type="color" id="editShiftColor" class="w-full h-10 p-1 border rounded-lg">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="closeEditShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
+                    <button onclick="updateShift()" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salva</button>
                 </div>
             </div>
         </div>
@@ -487,6 +479,7 @@
         let currentYear = currentDate.getFullYear();
         let currentDay = currentDate.getDate();
         let currentNoteKey = null;
+        let currentEditShiftKey = null;
         let selectedShift = null;
 
         function storageAvailable(type) {
@@ -536,13 +529,6 @@
                 try {
                     if (noteText) {
                         localStorage.setItem(currentNoteKey, noteText);
-                        // Invia notifica locale
-                        if ('Notification' in window && Notification.permission === 'granted') {
-                            new Notification('Nota salvata', {
-                                body: `Nota per ${currentNoteKey.split('_').slice(1).join('/')}: ${noteText.substring(0, 50)}...`,
-                                icon: '/icon-192.png'
-                            });
-                        }
                     } else {
                         localStorage.removeItem(currentNoteKey);
                     }
@@ -622,79 +608,70 @@
         }
 
         function openEditShiftModal() {
-            const select = document.getElementById('editShiftSelect');
+            const select = document.createElement('select');
+            select.id = 'editShiftSelect';
+            select.className = 'w-full p-2 border rounded-lg mb-4';
             select.innerHTML = '<option value="">Seleziona un turno</option>' + 
                 Object.keys(shifts).map(
                     key => `<option value="${key}">${shifts[key].name} (${shifts[key].hours}h)</option>`
                 ).join('');
-            document.getElementById('editShiftModal').classList.remove('hidden');
+
+            select.addEventListener('change', () => {
+                const shiftKey = select.value;
+                if (shiftKey && shifts[shiftKey]) {
+                    currentEditShiftKey = shiftKey;
+                    document.getElementById('editShiftName').value = shifts[shiftKey].name;
+                    document.getElementById('editShiftAbbreviation').value = shifts[shiftKey].abbreviation;
+                    document.getElementById('editShiftHours').value = shifts[shiftKey].hours;
+                    document.getElementById('editShiftColor').value = shifts[shiftKey].color;
+                } else {
+                    currentEditShiftKey = null;
+                    document.getElementById('editShiftName').value = '';
+                    document.getElementById('editShiftAbbreviation').value = '';
+                    document.getElementById('editShiftHours').value = '';
+                    document.getElementById('editShiftColor').value = '#fef3c7';
+                }
+            });
+
+            const modal = document.getElementById('editShiftModal');
+            const modalContent = modal.querySelector('.bg-white');
+            const title = modalContent.querySelector('h3');
+            title.insertAdjacentElement('afterend', select);
+
+            modal.classList.remove('hidden');
         }
 
         function closeEditShiftModal() {
-            document.getElementById('editShiftModal').classList.add('hidden');
-            document.getElementById('editShiftSelect').value = '';
-            document.getElementById('editShiftName').value = '';
-            document.getElementById('editShiftAbbreviation').value = '';
-            document.getElementById('editShiftHours').value = '';
-            document.getElementById('editShiftColor').value = '#fef3c7';
+            const modal = document.getElementById('editShiftModal');
+            const select = document.getElementById('editShiftSelect');
+            if (select) select.remove();
+            modal.classList.add('hidden');
+            currentEditShiftKey = null;
         }
 
-        function loadShiftData() {
-            const shiftName = document.getElementById('editShiftSelect').value;
-            if (shiftName && shifts[shiftName]) {
-                const shift = shifts[shiftName];
-                document.getElementById('editShiftName').value = shift.name;
-                document.getElementById('editShiftAbbreviation').value = shift.abbreviation;
-                document.getElementById('editShiftHours').value = shift.hours;
-                document.getElementById('editShiftColor').value = shift.color;
-            }
-        }
-
-        function saveEditedShift() {
-            const oldShiftName = document.getElementById('editShiftSelect').value;
-            const newShiftName = document.getElementById('editShiftName').value.trim().toUpperCase();
-            const shiftAbbreviation = document.getElementById('editShiftAbbreviation').value.trim().toUpperCase();
-            const shiftHours = parseFloat(document.getElementById('editShiftHours').value);
-            const shiftColor = document.getElementById('editShiftColor').value;
-
-            if (!oldShiftName) {
+        function updateShift() {
+            if (!currentEditShiftKey) {
                 alert('Seleziona un turno da modificare.');
                 return;
             }
 
-            if (!newShiftName || isNaN(shiftHours)) {
-                alert('Inserisci un nome valido e un numero di ore valido.');
+            const shiftAbbreviation = document.getElementById('editShiftAbbreviation').value.trim().toUpperCase();
+            const shiftHours = parseFloat(document.getElementById('editShiftHours').value);
+            const shiftColor = document.getElementById('editShiftColor').value;
+
+            if (isNaN(shiftHours)) {
+                alert('Inserisci un numero di ore valido.');
                 return;
             }
 
-            if (newShiftName !== oldShiftName && shifts[newShiftName]) {
-                alert('Esiste già un turno con questo nome.');
-                return;
-            }
-
-            // Aggiorna i dati del turno
-            delete shifts[oldShiftName];
-            shifts[newShiftName] = {
-                name: newShiftName,
-                abbreviation: shiftAbbreviation || newShiftName,
+            shifts[currentEditShiftKey] = {
+                name: shifts[currentEditShiftKey].name,
+                abbreviation: shiftAbbreviation || shifts[currentEditShiftKey].name,
                 hours: shiftHours,
                 color: shiftColor
             };
+
             saveCustomShifts();
-
-            // Aggiorna i turni assegnati nei giorni
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
-                const savedShifts = loadShift(shiftKey);
-                const updatedShifts = savedShifts.map(s => (s === oldShiftName ? newShiftName : s));
-                if (updatedShifts.length > 0) {
-                    saveShift(shiftKey, updatedShifts);
-                } else {
-                    localStorage.removeItem(shiftKey);
-                }
-            }
-
             closeEditShiftModal();
             renderShiftSelector();
             renderCalendar();
@@ -1046,37 +1023,10 @@
             renderCalendar();
         }
 
-        function requestNotificationPermission() {
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        console.log('Permesso per notifiche concesso');
-                    } else {
-                        console.log('Permesso per notifiche negato');
-                    }
-                });
-            }
-        }
-
-        // Registra il Service Worker per la PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(
-                    registration => {
-                        console.log('Service Worker registrato:', registration);
-                    },
-                    error => {
-                        console.log('Registrazione Service Worker fallita:', error);
-                    }
-                );
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             loadCustomShifts();
             renderShiftSelector();
             renderCalendar();
-            requestNotificationPermission();
         });
     </script>
 </body>
