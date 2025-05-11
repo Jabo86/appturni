@@ -205,21 +205,23 @@
             color: #1f2937;
         }
         .shift-badge {
-            font-size: 10px;
+            font-size: 14px;
             font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 10px;
             background-color: rgba(0,0,0,0.1);
-            margin: 1px 0;
+            margin: 2px 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 100%;
+            max-width: 90%;
+            line-height: 1.2;
         }
         .single-shift {
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 10px;
+            font-size: 18px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            max-width: 100%;
         }
         .selected-shift {
             background-color: #3b82f6;
@@ -311,8 +313,6 @@
                     <i class="fas fa-times mr-1"></i> Rimuovi Turno
                 </button>
             </div>
-
-
 
             <!-- Pulsanti rettangolari -->
             <div class="action-buttons-container mt-3">
@@ -960,7 +960,6 @@
                                 saveShift(shiftKey, currentShifts);
                             } else {
                                 localStorage.removeItem(shiftKey);
-                            
                             }
                             renderCalendar();
                             updateWorkedHoursAndSummary();
