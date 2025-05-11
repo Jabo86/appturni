@@ -207,7 +207,7 @@
         .shift-badge {
             font-size: 10px;
             font-weight: bold;
-            padding: 1px 4px;
+            padding: 2px 6px;
             border-radius: 8px;
             background-color: rgba(0,0,0,0.1);
             margin: 1px 0;
@@ -215,6 +215,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
+        }
+        .single-shift {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 10px;
         }
         .selected-shift {
             background-color: #3b82f6;
@@ -265,13 +270,6 @@
             width: 100%;
             margin-bottom: 2px;
         }
-        .more-shifts {
-            font-size: 8px;
-            background-color: #e2e8f0;
-            border-radius: 8px;
-            padding: 0 4px;
-            margin-left: 2px;
-        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen">
@@ -313,6 +311,8 @@
                     <i class="fas fa-times mr-1"></i> Rimuovi Turno
                 </button>
             </div>
+
+
 
             <!-- Pulsanti rettangolari -->
             <div class="action-buttons-container mt-3">
@@ -910,24 +910,19 @@
                     const shiftsContainer = document.createElement('div');
                     shiftsContainer.className = 'shifts-container';
                     
-                    shiftNames.slice(0, 3).forEach(shiftName => {
+                    shiftNames.slice(0, 2).forEach(shiftName => {
                         if (shifts[shiftName]) {
                             const shiftBadge = document.createElement('div');
                             shiftBadge.className = 'shift-badge';
+                            if (shiftNames.length === 1) {
+                                shiftBadge.classList.add('single-shift');
+                            }
                             shiftBadge.textContent = shifts[shiftName].abbreviation;
                             shiftBadge.title = `${shifts[shiftName].name} (${shifts[shiftName].hours}h)`;
                             shiftBadge.style.backgroundColor = shifts[shiftName].color;
                             shiftsContainer.appendChild(shiftBadge);
                         }
                     });
-                    
-                    if (shiftNames.length > 3) {
-                        const moreBadge = document.createElement('span');
-                        moreBadge.className = 'more-shifts';
-                        moreBadge.textContent = `+${shiftNames.length - 3}`;
-                        moreBadge.title = 'Altri turni';
-                        shiftsContainer.appendChild(moreBadge);
-                    }
                     
                     cell.appendChild(shiftsContainer);
                 }
@@ -951,13 +946,13 @@
                         const shiftIndex = currentShifts.indexOf(selectedShift);
                         
                         if (shiftIndex === -1) {
-                            if (currentShifts.length < 3) {
+                            if (currentShifts.length < 2) {
                                 currentShifts.push(selectedShift);
                                 saveShift(shiftKey, currentShifts);
                                 renderCalendar();
                                 updateWorkedHoursAndSummary();
                             } else {
-                                alert('Puoi assegnare al massimo 3 turni per giorno.');
+                                alert('Puoi assegnare al massimo 2 turni per giorno.');
                             }
                         } else {
                             currentShifts.splice(shiftIndex, 1);
@@ -965,6 +960,7 @@
                                 saveShift(shiftKey, currentShifts);
                             } else {
                                 localStorage.removeItem(shiftKey);
+                            
                             }
                             renderCalendar();
                             updateWorkedHoursAndSummary();
