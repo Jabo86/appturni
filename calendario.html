@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TurniSmart</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome per icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Manifest per PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .grid-cal {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background-color: white;
+        }
+        .day-header {
+            height: 24px;
+            font-size: 10px;
+            line-height: 24px;
+            text-align: center;
+            background-color: #3b82f6;
+            color: white;
+            font-weight: bold;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .day-cell {
+            height: 100px;
+            padding: 3px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-size: 11px;
+            position: relative;
+            overflow: hidden;
+        }
+        .day-number {
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            margin-bottom: 2px;
+        }
+        .today .day-number {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 50%;
+        }
+        .current-day {
+            outline: 2px solid #3b82f6;
+            outline-offset: -2px;
+        }
+        .note-text {
+            font-size: 9px;
+            line-height: 1.2;
+            margin-top: 2px;
+            word-break: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            width: 100%;
+            text-align: center;
+            color: #333;
+        }
+        .holiday {
+            background-color: #ff0000 !important;
+        }
+        .nav-btn {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        .action-btn {
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            color: white;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .stats-container {
+            background-color: #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            color: white;
+            text-align: center;
+        }
+        .stats-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .stats-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .stats-subtitle {
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            text-align: center;
+        }
+        .stats-item {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            padding: 8px;
+        }
+        .stats-item-title {
+            font-size: 12px;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+        .stats-item-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #statsPage {
+            display: none;
+            padding: 16px;
+        }
+        .stats-page-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 16px;
+            color: #3b82f6;
+        }
+        .stats-section {
+            margin-bottom: 20px;
+        }
+        .stats-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        .back-btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 16px;
+            display: block;
+            text-align: center;
+            font-size: 16px;
+        }
+        .action-buttons-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .action-btn-flex {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            color: white;
+            text-align: center;
+        }
+        .shift-stats-container {
+            background-color: #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            color: white;
+        }
+        .notes-container {
+            background-color: #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+        }
+        .month-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #1f2937;
+        }
+        .shift-badge {
+            font-size: 10px;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 8px;
+            background-color: rgba(0,0,0,0.1);
+            margin: 1px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        .selected-shift {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .shift-selector-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: center;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .shift-option {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            font-size: 12px;
+        }
+        .clear-shift {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #f87171;
+            color: white;
+            border: none;
+            font-size: 12px;
+        }
+        .note-edit-btn {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            color: #3b82f6;
+            cursor: pointer;
+        }
+        .shifts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+        .more-shifts {
+            font-size: 8px;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            padding: 0 4px;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen">
+    <div class="container mx-auto p-2 max-w-md">
+        <!-- Pagina principale -->
+        <div id="mainPage">
+            <h1 class="text-xl font-bold text-center text-blue-800 mb-2">
+                <i class="fas fa-calendar-alt mr-1 text-orange-500"></i> TurniSmart
+            </h1>
+            
+            <div class="flex justify-between items-center mb-3">
+                <button onclick="prevMonth()" class="nav-btn bg-blue-600 text-white rounded-lg shadow">
+                    <i class="fas fa-arrow-left mr-1"></i> Precedente
+                </button>
+                <h2 id="monthYear" class="month-title"></h2>
+                <button onclick="nextMonth()" class="nav-btn bg-blue-600 text-white rounded-lg shadow">
+                    Successivo <i class="fas fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+
+            <!-- Calendario -->
+            <div class="grid-cal mb-4" id="calendar">
+                <div class="day-header">LUN</div>
+                <div class="day-header">MAR</div>
+                <div class="day-header">MER</div>
+                <div class="day-header">GIO</div>
+                <div class="day-header">VEN</div>
+                <div class="day-header">SAB</div>
+                <div class="day-header">DOM</div>
+            </div>
+
+            <!-- Selettore turni -->
+            <div class="bg-white p-3 rounded-lg shadow">
+                <div class="text-center font-bold mb-2">Seleziona Turno</div>
+                <div class="shift-selector-container" id="shiftSelector">
+                    <!-- I turni verranno aggiunti qui dinamicamente -->
+                </div>
+                <button onclick="clearSelectedShift()" class="clear-shift w-full mt-2">
+                    <i class="fas fa-times mr-1"></i> Rimuovi Turno
+                </button>
+            </div>
+
+            <!-- Pulsanti rettangolari -->
+            <div class="action-buttons-container mt-3">
+                <button onclick="openCreateShiftModal()" class="action-btn-flex bg-green-600">
+                    <i class="fas fa-plus mr-1"></i> Aggiungi Turno
+                </button>
+                <button onclick="openEditShiftModal()" class="action-btn-flex bg-yellow-600">
+                    <i class="fas fa-edit mr-1"></i> Modifica Turno
+                </button>
+                <button onclick="openDeleteShiftModal()" class="action-btn-flex bg-red-600">
+                    <i class="fas fa-trash mr-1"></i> Elimina Turno
+                </button>
+                <button onclick="showStatsPage()" class="action-btn-flex bg-purple-600">
+                    <i class="fas fa-chart-bar mr-1"></i> Statistiche
+                </button>
+            </div>
+        </div>
+
+        <!-- Pagina Statistiche -->
+        <div id="statsPage">
+            <h1 class="stats-page-title">
+                <i class="fas fa-chart-bar mr-1"></i> Statistiche Complete
+            </h1>
+            
+            <div class="stats-section">
+                <div class="stats-section-title">
+                    <i class="fas fa-clock mr-1"></i> Ore Lavorate
+                </div>
+                <div class="stats-container">
+                    <div id="statsWorkedHours" class="stats-value">0.00</div>
+                    <div class="stats-subtitle">Totale ore questo mese</div>
+                </div>
+            </div>
+            
+            <div class="stats-section">
+                <div class="stats-section-title">
+                    <i class="fas fa-calendar-day mr-1"></i> Turni
+                </div>
+                <div class="shift-stats-container">
+                    <div id="statsShiftsDetails" class="stats-grid"></div>
+                </div>
+            </div>
+            
+            <div class="stats-section">
+                <div class="stats-section-title">
+                    <i class="fas fa-sticky-note mr-1"></i> Note
+                </div>
+                <div class="notes-container">
+                    <div id="statsNotesList"></div>
+                </div>
+            </div>
+            
+            <button onclick="showMainPage()" class="back-btn">
+                <i class="fas fa-arrow-left mr-1"></i> Torna al Calendario
+            </button>
+        </div>
+
+        <!-- Modale per creare un nuovo turno -->
+        <div id="createShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+                <h3 class="text-lg font-semibold mb-4">Crea Nuovo Turno</h3>
+                <div class="mb-4">
+                    <label for="shiftName" class="block text-sm font-medium text-gray-700">Nome Turno (es. Mattina)</label>
+                    <input type="text" id="shiftName" class="w-full p-2 border rounded-lg" placeholder="Inserisci nome turno">
+                </div>
+                <div class="mb-4">
+                    <label for="shiftAbbreviation" class="block text-sm font-medium text-gray-700">Abbreviazione (es. M, opzionale)</label>
+                    <input type="text" id="shiftAbbreviation" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione">
+                </div>
+                <div class="mb-4">
+                    <label for="shiftHours" class="block text-sm font-medium text-gray-700">Ore</label>
+                    <input type="number" id="shiftHours" class="w-full p-2 border rounded-lg" placeholder="Inserisci ore" step="0.01">
+                </div>
+                <div class="mb-4">
+                    <label for="shiftColor" class="block text-sm font-medium text-gray-700">Colore Turno</label>
+                    <input type="color" id="shiftColor" class="w-full h-10 p-1 border rounded-lg" value="#fef3c7">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="closeCreateShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
+                    <button onclick="createShift()" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Crea</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale per modificare un turno -->
+        <div id="editShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+                <h3 class="text-lg font-semibold mb-4">Modifica Turno</h3>
+                <div class="mb-4">
+                    <label for="editShiftSelect" class="block text-sm font-medium text-gray-700">Seleziona Turno</label>
+                    <select id="editShiftSelect" class="w-full p-2 border rounded-lg" onchange="loadShiftData()">
+                        <option value="">Seleziona un turno</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftName" class="block text-sm font-medium text-gray-700">Nome Turno (es. Mattina)</label>
+                    <input type="text" id="editShiftName" class="w-full p-2 border rounded-lg" placeholder="Inserisci nome turno">
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftAbbreviation" class="block text-sm font-medium text-gray-700">Abbreviazione (es. M, opzionale)</label>
+                    <input type="text" id="editShiftAbbreviation" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione">
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftHours" class="block text-sm font-medium text-gray-700">Ore</label>
+                    <input type="number" id="editShiftHours" class="w-full p-2 border rounded-lg" placeholder="Inserisci ore" step="0.01">
+                </div>
+                <div class="mb-4">
+                    <label for="editShiftColor" class="block text-sm font-medium text-gray-700">Colore Turno</label>
+                    <input type="color" id="editShiftColor" class="w-full h-10 p-1 border rounded-lg" value="#fef3c7">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="closeEditShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
+                    <button onclick="saveEditedShift()" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salva</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale per eliminare un turno -->
+        <div id="deleteShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+                <h3 class="text-lg font-semibold mb-4">Elimina Turno</h3>
+                <div class="mb-4">
+                    <label for="deleteShiftSelect" class="block text-sm font-medium text-gray-700">Seleziona Turno</label>
+                    <select id="deleteShiftSelect" class="w-full p-2 border rounded-lg">
+                        <option value="">Seleziona un turno</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="closeDeleteShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
+                    <button onclick="deleteShift()" class="px-4 py-2 bg-red-600 text-white rounded-lg">Elimina</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale per aggiungere/modificare una nota -->
+        <div id="noteModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+                <h3 class="text-lg font-semibold mb-4">Aggiungi/Modifica Nota</h3>
+                <div class="mb-4">
+                    <label for="noteText" class="block text-sm font-medium text-gray-700">Nota</label>
+                    <textarea id="noteText" class="w-full p-2 border rounded-lg" placeholder="Inserisci una nota" rows="3"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="closeNoteModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Annulla</button>
+                    <button onclick="saveNote()" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Salva</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let shifts = {};
+        const holidays = [
+            { month: 0, day: 1 },   // 1 gennaio
+            { month: 0, day: 6 },   // 6 gennaio
+            { month: 3, day: 20 },  // 20 aprile (Pasqua)
+            { month: 3, day: 21 },  // 21 aprile (Pasquetta)
+            { month: 3, day: 25 },  // 25 aprile
+            { month: 4, day: 1 },   // 1 maggio
+            { month: 5, day: 2 },   // 2 giugno
+            { month: 7, day: 15 },  // 15 agosto
+            { month: 10, day: 1 },  // 1 novembre
+            { month: 11, day: 8 },  // 8 dicembre
+            { month: 11, day: 25 }, // 25 dicembre
+            { month: 11, day: 26 }  // 26 dicembre
+        ];
+
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        let currentDay = currentDate.getDate();
+        let currentNoteKey = null;
+        let selectedShift = null;
+
+        function storageAvailable(type) {
+            let storage;
+            try {
+                storage = window[type];
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        const isStorageAvailable = storageAvailable('localStorage');
+
+        function saveShift(shiftKey, shiftValue) {
+            if (isStorageAvailable) {
+                try {
+                    if (shiftValue) {
+                        localStorage.setItem(shiftKey, JSON.stringify(shiftValue));
+                    } else {
+                        localStorage.removeItem(shiftKey);
+                    }
+                } catch (e) {
+                    alert('Errore nel salvataggio dei turni.');
+                }
+            }
+        }
+
+        function loadShift(shiftKey) {
+            if (isStorageAvailable) {
+                try {
+                    const shift = localStorage.getItem(shiftKey);
+                    return shift ? JSON.parse(shift) : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+            return [];
+        }
+
+        function saveNote() {
+            if (currentNoteKey && isStorageAvailable) {
+                const noteText = document.getElementById('noteText').value.trim();
+                try {
+                    if (noteText) {
+                        localStorage.setItem(currentNoteKey, noteText);
+                        // Invia notifica locale
+                        if ('Notification' in window && Notification.permission === 'granted') {
+                            new Notification('Nota salvata', {
+                                body: `Nota per ${currentNoteKey.split('_').slice(1).join('/')}: ${noteText.substring(0, 50)}...`,
+                                icon: '/icon-192.png'
+                            });
+                        }
+                    } else {
+                        localStorage.removeItem(currentNoteKey);
+                    }
+                } catch (e) {
+                    alert('Errore nel salvataggio della nota.');
+                }
+                closeNoteModal();
+                renderCalendar();
+            }
+        }
+
+        function loadNote(noteKey) {
+            if (isStorageAvailable) {
+                try {
+                    const note = localStorage.getItem(noteKey);
+                    return note || '';
+                } catch (e) {
+                    return '';
+                }
+            }
+            return '';
+        }
+
+        function loadCustomShifts() {
+            if (isStorageAvailable) {
+                const customShifts = localStorage.getItem('customShifts');
+                if (customShifts) {
+                    shifts = JSON.parse(customShifts);
+                }
+            }
+        }
+
+        function saveCustomShifts() {
+            if (isStorageAvailable) {
+                localStorage.setItem('customShifts', JSON.stringify(shifts));
+            }
+        }
+
+        function openCreateShiftModal() {
+            document.getElementById('createShiftModal').classList.remove('hidden');
+        }
+
+        function closeCreateShiftModal() {
+            document.getElementById('createShiftModal').classList.add('hidden');
+            document.getElementById('shiftName').value = '';
+            document.getElementById('shiftAbbreviation').value = '';
+            document.getElementById('shiftHours').value = '';
+            document.getElementById('shiftColor').value = '#fef3c7';
+        }
+
+        function createShift() {
+            const shiftName = document.getElementById('shiftName').value.trim().toUpperCase();
+            const shiftAbbreviation = document.getElementById('shiftAbbreviation').value.trim().toUpperCase();
+            const shiftHours = parseFloat(document.getElementById('shiftHours').value);
+            const shiftColor = document.getElementById('shiftColor').value;
+
+            if (!shiftName || isNaN(shiftHours)) {
+                alert('Inserisci un nome valido e un numero di ore valido.');
+                return;
+            }
+
+            if (shifts[shiftName]) {
+                alert('Esiste già un turno con questo nome.');
+                return;
+            }
+
+            shifts[shiftName] = { 
+                name: shiftName, 
+                abbreviation: shiftAbbreviation || shiftName,
+                hours: shiftHours, 
+                color: shiftColor 
+            };
+            saveCustomShifts();
+            closeCreateShiftModal();
+            renderShiftSelector();
+            renderCalendar();
+        }
+
+        function openEditShiftModal() {
+            const select = document.getElementById('editShiftSelect');
+            select.innerHTML = '<option value="">Seleziona un turno</option>' + 
+                Object.keys(shifts).map(
+                    key => `<option value="${key}">${shifts[key].name} (${shifts[key].hours}h)</option>`
+                ).join('');
+            document.getElementById('editShiftModal').classList.remove('hidden');
+        }
+
+        function closeEditShiftModal() {
+            document.getElementById('editShiftModal').classList.add('hidden');
+            document.getElementById('editShiftSelect').value = '';
+            document.getElementById('editShiftName').value = '';
+            document.getElementById('editShiftAbbreviation').value = '';
+            document.getElementById('editShiftHours').value = '';
+            document.getElementById('editShiftColor').value = '#fef3c7';
+        }
+
+        function loadShiftData() {
+            const shiftName = document.getElementById('editShiftSelect').value;
+            if (shiftName && shifts[shiftName]) {
+                const shift = shifts[shiftName];
+                document.getElementById('editShiftName').value = shift.name;
+                document.getElementById('editShiftAbbreviation').value = shift.abbreviation;
+                document.getElementById('editShiftHours').value = shift.hours;
+                document.getElementById('editShiftColor').value = shift.color;
+            }
+        }
+
+        function saveEditedShift() {
+            const oldShiftName = document.getElementById('editShiftSelect').value;
+            const newShiftName = document.getElementById('editShiftName').value.trim().toUpperCase();
+            const shiftAbbreviation = document.getElementById('editShiftAbbreviation').value.trim().toUpperCase();
+            const shiftHours = parseFloat(document.getElementById('editShiftHours').value);
+            const shiftColor = document.getElementById('editShiftColor').value;
+
+            if (!oldShiftName) {
+                alert('Seleziona un turno da modificare.');
+                return;
+            }
+
+            if (!newShiftName || isNaN(shiftHours)) {
+                alert('Inserisci un nome valido e un numero di ore valido.');
+                return;
+            }
+
+            if (newShiftName !== oldShiftName && shifts[newShiftName]) {
+                alert('Esiste già un turno con questo nome.');
+                return;
+            }
+
+            // Aggiorna i dati del turno
+            delete shifts[oldShiftName];
+            shifts[newShiftName] = {
+                name: newShiftName,
+                abbreviation: shiftAbbreviation || newShiftName,
+                hours: shiftHours,
+                color: shiftColor
+            };
+            saveCustomShifts();
+
+            // Aggiorna i turni assegnati nei giorni
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
+                const savedShifts = loadShift(shiftKey);
+                const updatedShifts = savedShifts.map(s => (s === oldShiftName ? newShiftName : s));
+                if (updatedShifts.length > 0) {
+                    saveShift(shiftKey, updatedShifts);
+                } else {
+                    localStorage.removeItem(shiftKey);
+                }
+            }
+
+            closeEditShiftModal();
+            renderShiftSelector();
+            renderCalendar();
+        }
+
+        function openDeleteShiftModal() {
+            const select = document.getElementById('deleteShiftSelect');
+            select.innerHTML = '<option value="">Seleziona un turno</option>' + 
+                Object.keys(shifts).map(
+                    key => `<option value="${key}">${shifts[key].name} (${shifts[key].hours}h)</option>`
+                ).join('');
+            document.getElementById('deleteShiftModal').classList.remove('hidden');
+        }
+
+        function closeDeleteShiftModal() {
+            document.getElementById('deleteShiftModal').classList.add('hidden');
+            document.getElementById('deleteShiftSelect').value = '';
+        }
+
+        function deleteShift() {
+            const shiftName = document.getElementById('deleteShiftSelect').value;
+            if (!shiftName) {
+                alert('Seleziona un turno da eliminare.');
+                return;
+            }
+
+            delete shifts[shiftName];
+            saveCustomShifts();
+
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
+                const savedShifts = loadShift(shiftKey);
+                const updatedShifts = savedShifts.filter(s => s !== shiftName);
+                if (updatedShifts.length === 0) {
+                    localStorage.removeItem(shiftKey);
+                } else {
+                    saveShift(shiftKey, updatedShifts);
+                }
+            }
+
+            closeDeleteShiftModal();
+            renderShiftSelector();
+            renderCalendar();
+        }
+
+        function openNoteModal(year, month, day) {
+            currentNoteKey = `note_${year}_${month}_${day}`;
+            const noteText = document.getElementById('noteText');
+            noteText.value = loadNote(currentNoteKey);
+            document.getElementById('noteModal').classList.remove('hidden');
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').classList.add('hidden');
+            document.getElementById('noteText').value = '';
+            currentNoteKey = null;
+        }
+
+        function calculateWorkedHours() {
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            let totalWorked = 0;
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
+                const shiftNames = loadShift(shiftKey);
+                shiftNames.forEach(shiftName => {
+                    if (shifts[shiftName]) {
+                        totalWorked += shifts[shiftName].hours;
+                    }
+                });
+            }
+
+            return totalWorked;
+        }
+
+        function calculateShiftSummary() {
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const shiftCounts = {};
+            const shiftHours = {};
+
+            Object.keys(shifts).forEach(shift => {
+                shiftCounts[shift] = 0;
+                shiftHours[shift] = 0;
+            });
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
+                const shiftNames = loadShift(shiftKey);
+                shiftNames.forEach(shiftName => {
+                    if (shifts[shiftName]) {
+                        shiftCounts[shiftName]++;
+                        shiftHours[shiftName] += shifts[shiftName].hours;
+                    }
+                });
+            }
+
+            let summaryHtml = '';
+            Object.keys(shifts).forEach(shift => {
+                summaryHtml += `
+                    <div class="stats-item">
+                        <div class="stats-item-title">${shifts[shift].name}</div>
+                        <div class="stats-item-value">${shiftCounts[shift]}</div>
+                        <div class="stats-item-title">${shiftHours[shift].toFixed(2)}h</div>
+                    </div>
+                `;
+            });
+
+            if (!Object.keys(shifts).length) {
+                summaryHtml = '<div class="stats-item">Nessun turno assegnato</div>';
+            }
+
+            return summaryHtml;
+        }
+
+        function updateWorkedHoursAndSummary() {
+            const workedHours = calculateWorkedHours();
+            document.getElementById('statsWorkedHours').textContent = workedHours.toFixed(2);
+            
+            const shiftSummary = calculateShiftSummary();
+            document.getElementById('statsShiftsDetails').innerHTML = shiftSummary;
+            
+            updateStatsNotes();
+        }
+
+        function updateStatsNotes() {
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            let notesHtml = '';
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const noteKey = `note_${currentYear}_${currentMonth}_${day}`;
+                const noteText = loadNote(noteKey);
+                
+                if (noteText) {
+                    const date = new Date(currentYear, currentMonth, day);
+                    const dayName = ['DOM', 'LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB'][date.getDay()];
+                    
+                    notesHtml += `
+                        <div class="mb-3 pb-3 border-b border-blue-300">
+                            <div class="font-bold text-white">${day} ${dayName}</div>
+                            <div class="text-sm text-white">${noteText}</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (!notesHtml) {
+                notesHtml = '<div class="text-white text-center">Nessuna nota presente</div>';
+            }
+            
+            document.getElementById('statsNotesList').innerHTML = notesHtml;
+        }
+
+        function showStatsPage() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('statsPage').style.display = 'block';
+            updateWorkedHoursAndSummary();
+        }
+
+        function showMainPage() {
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('statsPage').style.display = 'none';
+        }
+
+        function renderShiftSelector() {
+            const shiftSelector = document.getElementById('shiftSelector');
+            shiftSelector.innerHTML = '';
+            
+            Object.keys(shifts).forEach(shiftKey => {
+                const shift = shifts[shiftKey];
+                const shiftOption = document.createElement('div');
+                shiftOption.className = `shift-option ${selectedShift === shiftKey ? 'selected-shift' : ''}`;
+                shiftOption.style.backgroundColor = shift.color;
+                shiftOption.textContent = shift.abbreviation;
+                shiftOption.title = `${shift.name} (${shift.hours}h)`;
+                
+                shiftOption.addEventListener('click', () => {
+                    selectedShift = shiftKey;
+                    renderShiftSelector();
+                });
+                
+                shiftSelector.appendChild(shiftOption);
+            });
+        }
+
+        function clearSelectedShift() {
+            selectedShift = null;
+            renderShiftSelector();
+        }
+
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            const monthYear = document.getElementById('monthYear');
+
+            while (calendar.children.length > 7) {
+                calendar.removeChild(calendar.lastChild);
+            }
+
+            const monthNames = [
+                'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+            monthYear.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const offset = firstDay === 0 ? 6 : firstDay - 1;
+
+            for (let i = 0; i < offset; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'day-cell';
+                calendar.appendChild(emptyCell);
+            }
+
+            const today = new Date();
+            const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+
+                if (isCurrentMonth && day === today.getDate()) {
+                    cell.classList.add('current-day');
+                    cell.classList.add('today');
+                }
+
+                const dayNumber = document.createElement('span');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                cell.appendChild(dayNumber);
+
+                const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
+                const shiftNames = loadShift(shiftKey);
+
+                if (shiftNames.length > 0) {
+                    const shiftsContainer = document.createElement('div');
+                    shiftsContainer.className = 'shifts-container';
+                    
+                    shiftNames.slice(0, 3).forEach(shiftName => {
+                        if (shifts[shiftName]) {
+                            const shiftBadge = document.createElement('div');
+                            shiftBadge.className = 'shift-badge';
+                            shiftBadge.textContent = shifts[shiftName].abbreviation;
+                            shiftBadge.title = `${shifts[shiftName].name} (${shifts[shiftName].hours}h)`;
+                            shiftBadge.style.backgroundColor = shifts[shiftName].color;
+                            shiftsContainer.appendChild(shiftBadge);
+                        }
+                    });
+                    
+                    if (shiftNames.length > 3) {
+                        const moreBadge = document.createElement('span');
+                        moreBadge.className = 'more-shifts';
+                        moreBadge.textContent = `+${shiftNames.length - 3}`;
+                        moreBadge.title = 'Altri turni';
+                        shiftsContainer.appendChild(moreBadge);
+                    }
+                    
+                    cell.appendChild(shiftsContainer);
+                }
+
+                if (shiftNames.length > 0 && shifts[shiftNames[0]]) {
+                    cell.style.backgroundColor = shifts[shiftNames[0]].color;
+                }
+
+                const date = new Date(currentYear, currentMonth, day);
+                const isHoliday = holidays.some(h => h.month === currentMonth && h.day === day);
+                const isSunday = date.getDay() === 0;
+                if (isHoliday || isSunday) {
+                    cell.classList.add('holiday');
+                }
+
+                cell.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('note-edit-btn')) return;
+                    
+                    if (selectedShift) {
+                        const currentShifts = loadShift(shiftKey);
+                        const shiftIndex = currentShifts.indexOf(selectedShift);
+                        
+                        if (shiftIndex === -1) {
+                            if (currentShifts.length < 3) {
+                                currentShifts.push(selectedShift);
+                                saveShift(shiftKey, currentShifts);
+                                renderCalendar();
+                                updateWorkedHoursAndSummary();
+                            } else {
+                                alert('Puoi assegnare al massimo 3 turni per giorno.');
+                            }
+                        } else {
+                            currentShifts.splice(shiftIndex, 1);
+                            if (currentShifts.length > 0) {
+                                saveShift(shiftKey, currentShifts);
+                            } else {
+                                localStorage.removeItem(shiftKey);
+                            }
+                            renderCalendar();
+                            updateWorkedHoursAndSummary();
+                        }
+                    }
+                });
+
+                const noteKey = `note_${currentYear}_${currentMonth}_${day}`;
+                const noteText = loadNote(noteKey);
+                if (noteText) {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'note-text';
+                    noteDiv.textContent = noteText;
+                    cell.appendChild(noteDiv);
+                }
+
+                const noteEditBtn = document.createElement('div');
+                noteEditBtn.className = 'note-edit-btn';
+                noteEditBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                noteEditBtn.title = 'Modifica nota';
+                noteEditBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openNoteModal(currentYear, currentMonth, day);
+                });
+                cell.appendChild(noteEditBtn);
+
+                calendar.appendChild(cell);
+            }
+
+            const totalCellsNeeded = offset + daysInMonth;
+            const rowsNeeded = Math.ceil(totalCellsNeeded / 7);
+            const totalCells = rowsNeeded * 7;
+
+            while (calendar.children.length < totalCells) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'day-cell';
+                calendar.appendChild(emptyCell);
+            }
+        }
+
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
+
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Permesso per notifiche concesso');
+                    } else {
+                        console.log('Permesso per notifiche negato');
+                    }
+                });
+            }
+        }
+
+        // Registra il Service Worker per la PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(
+                    registration => {
+                        console.log('Service Worker registrato:', registration);
+                    },
+                    error => {
+                        console.log('Registrazione Service Worker fallita:', error);
+                    }
+                );
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomShifts();
+            renderShiftSelector();
+            renderCalendar();
+            requestNotificationPermission();
+        });
+    </script>
+</body>
+</html>
