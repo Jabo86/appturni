@@ -47,6 +47,7 @@
             font-size: 11px;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         .day-number {
             font-weight: 700;
@@ -74,15 +75,53 @@
             word-break: break-word;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
+            display: none;
             width: 100%;
             text-align: center;
             color: #333;
         }
+        .day-cell:hover .note-text {
+            display: block;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 10;
+            max-width: 90%;
+            font-size: 8px;
+        }
+        @media (max-width: 768px) {
+            .day-cell:active .note-text {
+                display: block;
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 4px 8px;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                z-index: 10;
+                max-width: 90%;
+                font-size: 8px;
+            }
+        }
+        /* Animazione lampeggio giallo forte per celle con nota */
+        .has-note {
+            animation: pulse-yellow 2s infinite;
+        }
+        @keyframes pulse-yellow {
+            0% { background-color: white; }
+            50% { background-color: #FFFF00; } /* Giallo forte */
+            100% { background-color: white; }
+        }
         .holiday {
             background-color: #ff0000 !important;
+            animation: none; /* Disabilita il lampeggio per giorni festivi */
         }
         .action-btn {
             padding: 10px;
@@ -201,20 +240,20 @@
             color: #1f2937;
         }
         .shift-badge {
-            font-size: 12px; /* Ridotto per tre turni */
+            font-size: 11px;
             font-weight: bold;
-            padding: 3px 6px; /* Padding ridotto */
+            padding: 3px 6px;
             border-radius: 8px;
             margin: 2px 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 80%; /* Ridotto per tre turni */
+            max-width: 80%;
             line-height: 1.2;
             text-align: center;
         }
         .single-shift {
-            font-size: 14px; /* Leggermente più piccolo */
+            font-size: 14px;
             padding: 4px 8px;
             border-radius: 10px;
             max-width: 100%;
@@ -264,12 +303,11 @@
         .shifts-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px; /* Aumentato per tre turni */
+            gap: 6px;
             justify-content: center;
             width: 100%;
             margin-bottom: 2px;
         }
-        /* Stili per il selettore della lingua */
         .language-container {
             position: relative;
             display: inline-block;
@@ -328,7 +366,6 @@
             background: #dbeafe;
             color: #2563eb;
         }
-        /* Stili per le frecce di navigazione */
         .nav-arrow {
             display: flex;
             align-items: center;
@@ -350,12 +387,10 @@
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen">
     <div class="container mx-auto p-2 max-w-md">
-        <!-- Pagina principale -->
         <div id="mainPage">
             <h1 class="text-xl font-bold text-center text-blue-800 mb-2" data-translate="title">
                 <i class="fas fa-calendar-alt mr-1 text-orange-500"></i> AppTurni
             </h1>
-            
             <div class="flex justify-between items-center mb-3">
                 <button onclick="prevMonth()" class="nav-arrow" aria-label="Previous Month">
                     <i class="fas fa-chevron-left"></i>
@@ -381,8 +416,6 @@
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
-
-            <!-- Calendario -->
             <div class="grid-cal mb-4" id="calendar">
                 <div class="day-header" data-translate="monday">LUN</div>
                 <div class="day-header" data-translate="tuesday">MAR</div>
@@ -392,19 +425,13 @@
                 <div class="day-header" data-translate="saturday">SAB</div>
                 <div class="day-header" data-translate="sunday">DOM</div>
             </div>
-
-            <!-- Selettore turni -->
             <div class="bg-white p-3 rounded-lg shadow">
                 <div class="text-center font-bold mb-2" data-translate="selectShift">Seleziona Turno</div>
-                <div class="shift-selector-container" id="shiftSelector">
-                    <!-- I turni verranno aggiunti qui dinamicamente -->
-                </div>
+                <div class="shift-selector-container" id="shiftSelector"></div>
                 <button onclick="clearShift()" class="clear-shift w-full mt-2" data-translate="clearShift">
                     <i class="fas fa-times mr-1"></i> Rimuovi Turno
                 </button>
             </div>
-
-            <!-- Pulsanti rettangolari -->
             <div class="action-buttons-container mt-3">
                 <button onclick="openCreateShiftModal()" class="action-btn-flex bg-green-600" data-translate="addShift">
                     <i class="fas fa-plus mr-1"></i> Aggiungi Turno
@@ -420,13 +447,10 @@
                 </button>
             </div>
         </div>
-
-        <!-- Pagina Statistiche -->
         <div id="statsPage">
             <h1 class="stats-page-title" data-translate="statsTitle">
                 <i class="fas fa-chart-bar mr-1"></i> Statistiche Complete
             </h1>
-            
             <div class="stats-section">
                 <div class="stats-section-title" data-translate="workedHours">
                     <i class="fas fa-clock mr-1"></i> Ore Lavorate
@@ -436,7 +460,6 @@
                     <div class="stats-subtitle" data-translate="totalHoursMonth">Totale ore questo mese</div>
                 </div>
             </div>
-            
             <div class="stats-section">
                 <div class="stats-section-title" data-translate="shifts">
                     <i class="fas fa-calendar-day mr-1"></i> Turni
@@ -445,7 +468,6 @@
                     <div id="statsShiftsDetails" class="stats-grid"></div>
                 </div>
             </div>
-            
             <div class="stats-section">
                 <div class="stats-section-title" data-translate="notes">
                     <i class="fas fa-sticky-note mr-1"></i> Note
@@ -454,13 +476,10 @@
                     <div id="statsNotesList"></div>
                 </div>
             </div>
-            
             <button onclick="showMainPage()" class="back-btn" data-translate="backToCalendar">
                 <i class="fas fa-arrow-left mr-1"></i> Torna al Calendario
             </button>
         </div>
-
-        <!-- Modale per creare un nuovo turno -->
         <div id="createShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="createShiftTitle">Crea Nuovo Turno</h3>
@@ -486,8 +505,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modale per eliminare un turno -->
         <div id="deleteShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="deleteShiftTitle">Elimina Turno</h3>
@@ -503,8 +520,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modale per modificare un turno -->
         <div id="editShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="editShiftTitle">Modifica Turno</h3>
@@ -530,8 +545,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modale per aggiungere/modificare una nota -->
         <div id="noteModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="noteTitle">Aggiungi/Modifica Nota</h3>
@@ -546,7 +559,6 @@
             </div>
         </div>
     </div>
-
     <script>
         let shifts = {};
         const holidays = [
@@ -563,7 +575,6 @@
             { month: 11, day: 25 }, // 25 dicembre
             { month: 11, day: 26 }  // 26 dicembre
         ];
-
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
@@ -571,8 +582,6 @@
         let currentNoteKey = null;
         let currentEditShiftKey = null;
         let selectedShift = null;
-
-        // Oggetto delle traduzioni
         const translations = {
             it: {
                 title: "AppTurni",
@@ -845,8 +854,6 @@
                 editNote: "Editar nota"
             }
         };
-
-        // Funzione per aggiornare le traduzioni
         function updateTranslations(lang) {
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
@@ -861,20 +868,16 @@
                     }
                 }
             });
-
             document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
                 const key = element.getAttribute('data-translate-placeholder');
                 if (translations[lang][key]) {
                     element.placeholder = translations[lang][key];
                 }
             });
-
             document.title = translations[lang].title;
-
             document.querySelectorAll('.note-edit-btn').forEach(btn => {
                 btn.title = translations[lang].editNote;
             });
-
             const monthNames = {
                 it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
                 en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -884,22 +887,17 @@
             };
             document.getElementById('monthYear').textContent = `${monthNames[lang][currentMonth]} ${currentYear}`;
         }
-
-        // Sovrascrivi la funzione alert per tradurre i messaggi
         const originalAlert = window.alert;
         window.alert = function(message) {
             const lang = localStorage.getItem('selectedLanguage') || 'it';
             const translatedMessage = translations[lang][message] || message;
             originalAlert(translatedMessage);
         };
-
-        // Funzione per gestire il selettore della lingua
         function initializeLanguageSelector() {
             const languageButton = document.getElementById('languageButton');
             const languageDropdown = document.getElementById('languageDropdown');
             const selectedLanguageSpan = document.getElementById('selectedLanguage');
             const languageOptions = document.querySelectorAll('.language-option');
-
             const savedLanguage = localStorage.getItem('selectedLanguage') || 'it';
             const languageMap = {
                 'it': 'Italiano',
@@ -909,15 +907,12 @@
                 'es': 'Español'
             };
             selectedLanguageSpan.textContent = languageMap[savedLanguage] || 'Italiano';
-
             updateTranslations(savedLanguage);
-
             languageButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 languageDropdown.classList.toggle('active');
                 languageButton.classList.toggle('active');
             });
-
             languageOptions.forEach(option => {
                 option.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -930,7 +925,6 @@
                     renderCalendar();
                 });
             });
-
             document.addEventListener('click', (e) => {
                 if (!languageButton.contains(e.target) && !languageDropdown.contains(e.target)) {
                     languageDropdown.classList.remove('active');
@@ -938,7 +932,6 @@
                 }
             });
         }
-
         function storageAvailable(type) {
             let storage;
             try {
@@ -951,9 +944,7 @@
                 return false;
             }
         }
-
         const isStorageAvailable = storageAvailable('localStorage');
-
         function saveShift(shiftKey, shiftValue) {
             if (isStorageAvailable) {
                 try {
@@ -967,7 +958,6 @@
                 }
             }
         }
-
         function loadShift(shiftKey) {
             if (isStorageAvailable) {
                 try {
@@ -979,7 +969,6 @@
             }
             return [];
         }
-
         function saveNote() {
             if (currentNoteKey && isStorageAvailable) {
                 const noteText = document.getElementById('noteText').value.trim();
@@ -996,7 +985,6 @@
                 renderCalendar();
             }
         }
-
         function loadNote(noteKey) {
             if (isStorageAvailable) {
                 try {
@@ -1008,7 +996,6 @@
             }
             return '';
         }
-
         function loadCustomShifts() {
             if (isStorageAvailable) {
                 const customShifts = localStorage.getItem('customShifts');
@@ -1017,7 +1004,6 @@
                 }
             }
         }
-
         function saveCustomShifts() {
             if (isStorageAvailable) {
                 try {
@@ -1027,23 +1013,19 @@
                 }
             }
         }
-
         function timeToDecimal(time) {
             if (!time || !time.includes(':')) return 0;
             const [hours, minutes] = time.split(':').map(Number);
             return hours + (minutes / 60);
         }
-
         function decimalToTime(decimal) {
             const hours = Math.floor(decimal);
             const minutes = Math.round((decimal - hours) * 60);
             return `${hours}:${minutes.toString().padStart(2, '0')}`;
         }
-
         function openCreateShiftModal() {
             document.getElementById('createShiftModal').classList.remove('hidden');
         }
-
         function closeCreateShiftModal() {
             document.getElementById('createShiftModal').classList.add('hidden');
             document.getElementById('shiftName').value = '';
@@ -1051,29 +1033,24 @@
             document.getElementById('shiftHours').value = '';
             document.getElementById('shiftColor').value = '#fef3c7';
         }
-
         function createShift() {
             const shiftName = document.getElementById('shiftName').value.trim().toUpperCase();
             const shiftAbbreviation = document.getElementById('shiftAbbreviation').value.trim().toUpperCase();
             const shiftHoursInput = document.getElementById('shiftHours').value.trim();
             const shiftColor = document.getElementById('shiftColor').value;
-
             if (!shiftName || !shiftHoursInput) {
                 alert('alertInvalidNameHours');
                 return;
             }
-
             const shiftHours = timeToDecimal(shiftHoursInput);
             if (isNaN(shiftHours)) {
                 alert('alertInvalidHours');
                 return;
             }
-
             if (shifts[shiftName]) {
                 alert('alertShiftExists');
                 return;
             }
-
             shifts[shiftName] = { 
                 name: shiftName, 
                 abbreviation: shiftAbbreviation || shiftName,
@@ -1085,7 +1062,6 @@
             renderShiftSelector();
             renderCalendar();
         }
-
         function openEditShiftModal() {
             const select = document.createElement('select');
             select.id = 'editShiftSelect';
@@ -1094,7 +1070,6 @@
                 Object.keys(shifts).map(
                     key => `<option value="${key}">${shifts[key].name} (${decimalToTime(shifts[key].hours)})</option>`
                 ).join('');
-
             select.addEventListener('change', () => {
                 const shiftKey = select.value;
                 if (shiftKey && shifts[shiftKey]) {
@@ -1111,16 +1086,13 @@
                     document.getElementById('editShiftColor').value = '#fef3c7';
                 }
             });
-
             const modal = document.getElementById('editShiftModal');
             const modalContent = modal.querySelector('.bg-white');
             const title = modalContent.querySelector('h3');
             title.insertAdjacentElement('afterend', select);
-
             modal.classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
         }
-
         function closeEditShiftModal() {
             const modal = document.getElementById('editShiftModal');
             const select = document.getElementById('editShiftSelect');
@@ -1128,36 +1100,30 @@
             modal.classList.add('hidden');
             currentEditShiftKey = null;
         }
-
         function updateShift() {
             if (!currentEditShiftKey) {
                 alert('alertSelectShiftToEdit');
                 return;
             }
-
             const shiftAbbreviation = document.getElementById('editShiftAbbreviation').value.trim().toUpperCase();
             const shiftHoursInput = document.getElementById('editShiftHours').value.trim();
             const shiftColor = document.getElementById('editShiftColor').value;
-
             const shiftHours = timeToDecimal(shiftHoursInput);
             if (isNaN(shiftHours)) {
                 alert('alertInvalidHours');
                 return;
             }
-
             shifts[currentEditShiftKey] = {
                 name: shifts[currentEditShiftKey].name,
                 abbreviation: shiftAbbreviation || shifts[currentEditShiftKey].name,
                 hours: shiftHours,
                 color: shiftColor
             };
-
             saveCustomShifts();
             closeEditShiftModal();
             renderShiftSelector();
             renderCalendar();
         }
-
         function openDeleteShiftModal() {
             const select = document.getElementById('deleteShiftSelect');
             select.innerHTML = '<option value="" data-translate="selectShiftOption">Seleziona un turno</option>' + 
@@ -1167,22 +1133,18 @@
             document.getElementById('deleteShiftModal').classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
         }
-
         function closeDeleteShiftModal() {
             document.getElementById('deleteShiftModal').classList.add('hidden');
             document.getElementById('deleteShiftSelect').value = '';
         }
-
         function deleteShift() {
             const shiftName = document.getElementById('deleteShiftSelect').value;
             if (!shiftName) {
                 alert('alertSelectShiftToDelete');
                 return;
             }
-
             delete shifts[shiftName];
             saveCustomShifts();
-
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             for (let day = 1; day <= daysInMonth; day++) {
                 const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
@@ -1190,18 +1152,15 @@
                 const updatedShifts = savedShifts.filter(s => s !== shiftName);
                 saveShift(shiftKey, updatedShifts);
             }
-
             if (selectedShift === shiftName) {
                 selectedShift = null;
                 renderShiftSelector();
             }
-
             closeDeleteShiftModal();
             renderShiftSelector();
             renderCalendar();
             updateWorkedHoursAndSummary();
         }
-
         function openNoteModal(year, month, day) {
             currentNoteKey = `note_${year}_${month}_${day}`;
             const noteText = document.getElementById('noteText');
@@ -1209,17 +1168,14 @@
             document.getElementById('noteModal').classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
         }
-
         function closeNoteModal() {
             document.getElementById('noteModal').classList.add('hidden');
             document.getElementById('noteText').value = '';
             currentNoteKey = null;
         }
-
         function calculateWorkedHours() {
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             let totalWorked = 0;
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
                 const shiftNames = loadShift(shiftKey);
@@ -1229,20 +1185,16 @@
                     }
                 });
             }
-
             return totalWorked;
         }
-
         function calculateShiftSummary() {
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const shiftCounts = {};
             const shiftHours = {};
-
             Object.keys(shifts).forEach(shift => {
                 shiftCounts[shift] = 0;
                 shiftHours[shift] = 0;
             });
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
                 const shiftNames = loadShift(shiftKey);
@@ -1253,7 +1205,6 @@
                     }
                 });
             }
-
             const lang = localStorage.getItem('selectedLanguage') || 'it';
             let summaryHtml = '';
             Object.keys(shifts).forEach(shift => {
@@ -1267,33 +1218,25 @@
                     </div>
                 `;
             });
-
             if (!Object.keys(shifts).length) {
                 summaryHtml = `<div class="stats-item">${translations[lang].noShiftsAssigned}</div>`;
             }
-
             return summaryHtml;
         }
-
         function updateWorkedHoursAndSummary() {
             const workedHours = calculateWorkedHours();
             document.getElementById('statsWorkedHours').textContent = decimalToTime(workedHours);
-            
             const shiftSummary = calculateShiftSummary();
             document.getElementById('statsShiftsDetails').innerHTML = shiftSummary;
-            
             updateStatsNotes();
         }
-
         function updateStatsNotes() {
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const lang = localStorage.getItem('selectedLanguage') || 'it';
             let notesHtml = '';
-            
             for (let day = 1; day <= daysInMonth; day++) {
                 const noteKey = `note_${currentYear}_${currentMonth}_${day}`;
                 const noteText = loadNote(noteKey);
-                
                 if (noteText) {
                     const date = new Date(currentYear, currentMonth, day);
                     const dayNames = {
@@ -1304,7 +1247,6 @@
                         es: ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB']
                     };
                     const dayName = dayNames[lang][date.getDay()];
-                    
                     notesHtml += `
                         <div class="mb-3 pb-3 border-b border-blue-300">
                             <div class="font-bold text-white">${day} ${dayName}</div>
@@ -1313,29 +1255,23 @@
                     `;
                 }
             }
-            
             if (!notesHtml) {
                 notesHtml = `<div class="text-white text-center">${translations[lang].noNotesPresent}</div>`;
             }
-            
             document.getElementById('statsNotesList').innerHTML = notesHtml;
         }
-
         function showStatsPage() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('statsPage').style.display = 'block';
             updateWorkedHoursAndSummary();
         }
-
         function showMainPage() {
             document.getElementById('mainPage').style.display = 'block';
             document.getElementById('statsPage').style.display = 'none';
         }
-
         function renderShiftSelector() {
             const shiftSelector = document.getElementById('shiftSelector');
             shiftSelector.innerHTML = '';
-            
             Object.keys(shifts).forEach(shiftKey => {
                 const shift = shifts[shiftKey];
                 const shiftOption = document.createElement('div');
@@ -1343,30 +1279,24 @@
                 shiftOption.style.backgroundColor = shift.color;
                 shiftOption.textContent = shift.abbreviation;
                 shiftOption.title = `${shift.name} (${decimalToTime(shifts[shiftKey].hours)})`;
-                
                 shiftOption.addEventListener('click', () => {
                     selectedShift = shiftKey;
                     renderShiftSelector();
                 });
-                
                 shiftSelector.appendChild(shiftOption);
             });
         }
-
         function clearShift() {
             selectedShift = null;
             renderShiftSelector();
         }
-
         function renderCalendar() {
             const calendar = document.getElementById('calendar');
             const monthYear = document.getElementById('monthYear');
             const lang = localStorage.getItem('selectedLanguage') || 'it';
-
             while (calendar.children.length > 7) {
                 calendar.removeChild(calendar.lastChild);
             }
-
             const monthNames = {
                 it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
                 en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -1375,41 +1305,32 @@
                 es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
             };
             monthYear.textContent = `${monthNames[lang][currentMonth]} ${currentYear}`;
-
             const firstDay = new Date(currentYear, currentMonth, 1).getDay();
             const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
             const offset = firstDay === 0 ? 6 : firstDay - 1;
-
             for (let i = 0; i < offset; i++) {
                 const emptyCell = document.createElement('div');
                 emptyCell.className = 'day-cell';
                 calendar.appendChild(emptyCell);
             }
-
             const today = new Date();
             const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const cell = document.createElement('div');
                 cell.className = 'day-cell';
-
                 if (isCurrentMonth && day === today.getDate()) {
                     cell.classList.add('current-day');
                     cell.classList.add('today');
                 }
-
                 const dayNumber = document.createElement('span');
                 dayNumber.className = 'day-number';
                 dayNumber.textContent = day;
                 cell.appendChild(dayNumber);
-
                 const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
                 const shiftNames = loadShift(shiftKey);
-
                 if (shiftNames.length > 0) {
                     const shiftsContainer = document.createElement('div');
                     shiftsContainer.className = 'shifts-container';
-                    
                     shiftNames.slice(0, 3).forEach(shiftName => {
                         if (shifts[shiftName]) {
                             const shiftBadge = document.createElement('div');
@@ -1423,24 +1344,19 @@
                             shiftsContainer.appendChild(shiftBadge);
                         }
                     });
-                    
                     cell.appendChild(shiftsContainer);
                 }
-
                 const date = new Date(currentYear, currentMonth, day);
                 const isHoliday = holidays.some(h => h.month === currentMonth && h.day === day);
                 const isSunday = date.getDay() === 0;
                 if (isHoliday || isSunday) {
                     cell.classList.add('holiday');
                 }
-
                 cell.addEventListener('click', (e) => {
                     if (e.target.classList.contains('note-edit-btn')) return;
-                    
                     if (selectedShift) {
                         const currentShifts = loadShift(shiftKey);
                         const shiftIndex = currentShifts.indexOf(selectedShift);
-                        
                         if (shiftIndex === -1) {
                             if (currentShifts.length < 3) {
                                 currentShifts.push(selectedShift);
@@ -1458,16 +1374,18 @@
                         }
                     }
                 });
-
                 const noteKey = `note_${currentYear}_${currentMonth}_${day}`;
                 const noteText = loadNote(noteKey);
                 if (noteText) {
+                    cell.classList.add('has-note');
                     const noteDiv = document.createElement('div');
                     noteDiv.className = 'note-text';
                     noteDiv.textContent = noteText;
+                    if (shiftNames.length < 3) {
+                        noteDiv.style.display = 'block';
+                    }
                     cell.appendChild(noteDiv);
                 }
-
                 const noteEditBtn = document.createElement('div');
                 noteEditBtn.className = 'note-edit-btn';
                 noteEditBtn.innerHTML = '<i class="fas fa-edit"></i>';
@@ -1477,21 +1395,17 @@
                     openNoteModal(currentYear, currentMonth, day);
                 });
                 cell.appendChild(noteEditBtn);
-
                 calendar.appendChild(cell);
             }
-
             const totalCellsNeeded = offset + daysInMonth;
             const rowsNeeded = Math.ceil(totalCellsNeeded / 7);
             const totalCells = rowsNeeded * 7;
-
             while (calendar.children.length < totalCells) {
                 const emptyCell = document.createElement('div');
                 emptyCell.className = 'day-cell';
                 calendar.appendChild(emptyCell);
             }
         }
-
         function prevMonth() {
             currentMonth--;
             if (currentMonth < 0) {
@@ -1500,7 +1414,6 @@
             }
             renderCalendar();
         }
-
         function nextMonth() {
             currentMonth++;
             if (currentMonth > 11) {
@@ -1509,7 +1422,6 @@
             }
             renderCalendar();
         }
-
         document.addEventListener('DOMContentLoaded', () => {
             initializeLanguageSelector();
             loadCustomShifts();
