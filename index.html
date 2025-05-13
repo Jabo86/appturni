@@ -110,7 +110,7 @@
                 font-size: 8px;
             }
         }
-        /* Animazione lampeggio giallo forte per celle con nota */
+        /* Animazione lampeggio giallo forte per celle con nota (non festivi) */
         .has-note {
             animation: pulse-yellow 2s infinite;
         }
@@ -119,9 +119,18 @@
             50% { background-color: #FFFF00; } /* Giallo forte */
             100% { background-color: white; }
         }
+        /* Animazione lampeggio rosso per celle con nota sui festivi */
+        .has-note.holiday {
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { background-color: white; }
+            50% { background-color: #ff0000; } /* Rosso festivo */
+            100% { background-color: white; }
+        }
+        /* Sfondo rosso statico per festivi senza nota */
         .holiday {
-            background-color: #ff0000 !important;
-            animation: none; /* Disabilita il lampeggio per giorni festivi */
+            background-color: #ff0000;
         }
         .action-btn {
             padding: 10px;
@@ -493,7 +502,7 @@
                 </div>
                 <div class="mb-4">
                     <label for="shiftHours" class="block text-sm font-medium text-gray-700" data-translate="shiftHoursLabel">Ore (HH:MM)</label>
-                    <input type="text" id="shiftHours" class="w-full p-2 border rounded-lg" placeholder="Es. 07:15" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" data-translate-placeholder="shiftHoursPlaceholder">
+                    <input type=" text" id="shiftHours" class="w-full p-2 border rounded-lg" placeholder="Es. 07:15" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" data-translate-placeholder="shiftHoursPlaceholder">
                 </div>
                 <div class="mb-4">
                     <label for="shiftColor" class="block text-sm font-medium text-gray-700" data-translate="shiftColorLabel">Colore Turno</label>
