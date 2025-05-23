@@ -39,6 +39,18 @@
                         <button id="viewAnnual" class="menu-item" data-translate="viewAnnual">
                             <i class="fas fa-calendar-alt mr-2"></i> Visualizzazione Annuale
                         </button>
+                        <button onclick="openCreateShiftModal()" class="menu-item" data-translate="addShift">
+                            <i class="fas fa-plus mr-2"></i> Aggiungi Turno
+                        </button>
+                        <button onclick="openEditShiftModal()" class="menu-item" data-translate="editShift">
+                            <i class="fas fa-edit mr-2"></i> Modifica Turno
+                        </button>
+                        <button onclick="openDeleteShiftModal()" class="menu-item" data-translate="deleteShift">
+                            <i class="fas fa-trash mr-2"></i> Elimina Turno
+                        </button>
+                        <button onclick="showStatsPage()" class="menu-item" data-translate="statistics">
+                            <i class="fas fa-chart-bar mr-2"></i> Statistiche
+                        </button>
                     </div>
                 </div>
             </div>
@@ -84,22 +96,6 @@
                 <div class="shift-selector-container" id="shiftSelector"></div>
                 <button onclick="clearShift()" class="clear-shift w-full mt-2" data-translate="clearShift">
                     <i class="fas fa-times mr-1"></i> Rimuovi Turno
-                </button>
-            </div>
-            
-            <!-- Pulsanti Azione -->
-            <div class="action-buttons-container mt-3">
-                <button onclick="openCreateShiftModal()" class="action-btn-flex bg-green-600" data-translate="addShift">
-                    <i class="fas fa-plus mr-1"></i> Aggiungi Turno
-                </button>
-                <button onclick="openEditShiftModal()" class="action-btn-flex bg-yellow-600" data-translate="editShift">
-                    <i class="fas fa-edit mr-1"></i> Modifica Turno
-                </button>
-                <button onclick="openDeleteShiftModal()" class="action-btn-flex bg-red-600" data-translate="deleteShift">
-                    <i class="fas fa-trash mr-1"></i> Elimina Turno
-                </button>
-                <button onclick="showStatsPage()" class="action-btn-flex bg-purple-600" data-translate="statistics">
-                    <i class="fas fa-chart-bar mr-1"></i> Statistiche
                 </button>
             </div>
         </div>
@@ -208,7 +204,7 @@
                 <h3 class="text-lg font-semibold mb-4" data-translate="editShiftTitle">Modifica Turno</h3>
                 <div class="mb-4">
                     <label for="editShiftName" class="block text-sm font-medium text-gray-700" data-translate="shiftNameLabel">Nome Turno</label>
-                    <input type="text" id="editShiftName" class="w-full p-2 border rounded-lg" readonly>
+                    <input type="text" id="editShiftName" class="w-full p-2 border rounded-lg">
                 </div>
                 <div class="mb-4">
                     <label for="editShiftAbbreviation" class="block text-sm font-medium text-gray-700" data-translate="shiftAbbreviationLabel">Abbreviazione (opzionale)</label>
