@@ -229,7 +229,7 @@ body {
     font-weight: bold;
     text-align: center;
     margin-bottom: 16px;
-    color: #3b82f6;
+    color: #3bea56;
 }
 
 .stats-section {
@@ -309,29 +309,37 @@ body {
     justify-content: center;
 }
 
-/* Classi per dimensioni del testo e altezza in base al numero di turni */
-.shift-count-1 {
+/* Classi per dimensioni del testo in base alla lunghezza del testo */
+.shift-badge.short-text {
     font-size: clamp(10px, 3vw, 12px);
+}
+
+.shift-badge.medium-text {
+    font-size: clamp(8px, 2.5vw, 10px);
+}
+
+.shift-badge.long-text {
+    font-size: clamp(6px, 2vw, 8px);
+}
+
+/* Altezza e dimensioni in base al numero di turni */
+.shift-count-1 {
     height: 40px;
 }
 
 .shift-count-2 {
-    font-size: clamp(8px, 2.5vw, 10px);
     height: 25px;
 }
 
 .shift-count-3 {
-    font-size: clamp(7px, 2vw, 9px);
     height: 18px;
 }
 
 .shift-count-4 {
-    font-size: clamp(6px, 1.8vw, 8px);
     height: 15px;
 }
 
 .shift-count-5 {
-    font-size: clamp(5px, 1.5vw, 7px);
     height: 12px;
 }
 
@@ -425,15 +433,16 @@ body {
     right: 0;
     margin-top: 8px;
     width: 160px;
-    background: white;
+    background: #ffffff; /* Sfondo bianco opaco */
+    border: 1px solid #d1d5db; /* Bordo grigio chiaro */
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Ombra più scura */
     overflow: hidden;
     transform: translateY(-10px);
     opacity: 0;
     visibility: hidden;
     transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
-    z-index: 10;
+    z-index: 2000; /* z-index più alto per coprire gli elementi sottostanti */
 }
 
 .language-dropdown.active {
@@ -446,7 +455,7 @@ body {
     display: flex;
     align-items: center;
     padding: 10px 16px;
-    color: #1f2937;
+    color: #111827; /* Testo grigio scuro per alto contrasto */
     font-size: 14px;
     transition: background 0.2s, color 0.2s;
 }
@@ -458,8 +467,8 @@ body {
 }
 
 .language-option:hover {
-    background: #dbeafe;
-    color: #2563eb;
+    background: #e5e7eb; /* Grigio chiaro per hover */
+    color: #1f2937; /* Mantiene testo scuro */
 }
 
 .nav-arrow {
@@ -530,23 +539,6 @@ body {
 
 .hamburger-menu-content .menu-item:hover {
     background: #eff6ff;
-}
-
-/* Input time */
-.bg-white input[type="time"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #374151;
-}
-
-.bg-white input[type="time"]:focus {
-    outline: none;
-    border-color: #3b82f6;
 }
 
 /* Annual View Styles - Modificato per essere responsive */
