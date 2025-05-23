@@ -1,48 +1,159 @@
 /* Stili generali */
 body {
     font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%); /* Gradiente scuro, sovrascrive Tailwind */
+    color: #e2e8f0; /* Testo chiaro */
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Sovrascrivi lo sfondo dei modali per renderli opachi e limpidi */
+/* Header (per Logo, AppTurni, hamburger) */
+.header {
+    background-color: #1e293b; /* Grigio scuro per container header */
+}
+
+/* Logo (icona fa-calendar-alt) */
+.left-header .fa-calendar-alt {
+    color: #eab308; /* Giallo scuro, sovrascrive text-orange-500 */
+}
+
+/* AppTurni */
+.left-header h1 {
+    color: #ffffff; /* Bianco, sovrascrive text-blue-800 */
+}
+
+/* Barra di navigazione (frecce, mese, bandiera) */
+.header .flex.justify-between.items-center:not(:first-child) {
+    background-color: #1e293b; /* Grigio scuro per nav */
+}
+
+.month-title {
+    color: #ffffff; /* Bianco per mese */
+    font-size: clamp(1.5rem, 5vw, 2rem); /* Dimensione più grande */
+    font-weight: bold; /* Grassetto */
+}
+
+/* Sovrascrivi lo sfondo del modale (overlay) */
 .fixed.inset-0.bg-gray-800.bg-opacity-50 {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85); /* Fondo modale scuro */
     z-index: 1000;
 }
 
-/* Sovrascrivi il contenuto del modale per maggiore leggibilità */
+/* Sovrascrivi il contenuto del modale */
 .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full {
-    background-color: white;
+    background-color: #ffffff; /* Sfondo chiaro per il modale */
+    color: #333333; /* Testo scuro */
+    padding: 24px;
     border-radius: 8px;
-    padding: 16px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    color: #1f2937;
+    max-width: 400px;
+    width: 100%;
 }
 
-/* Stile per il pulsante di chiusura */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-gray-300.rounded-lg,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-blue-600.text-white.rounded-lg,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-red-600.text-white.rounded-lg {
-    color: #1f2937;
+/* Stile per le etichette nei modali */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full label {
+    display: block;
+    color: #333333; /* Testo scuro */
+    margin-bottom: 8px;
+    font-weight: 500;
 }
 
+/* Stile per input, select e textarea nei modali */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full select,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333333; /* Testo scuro */
+    background-color: #f9f9f9; /* Sfondo chiaro per input */
+}
+
+/* Stile per i placeholder */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full input::placeholder,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full textarea::placeholder {
+    color: #666666; /* Grigio scuro per placeholder */
+}
+
+/* Stile per il focus */
 .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input:focus,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full select:focus,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea:focus {
-    border-color: #3b82f6;
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full select:focus,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full textarea:focus {
+    border-color: #60a5fa; /* Blu chiaro */
     outline: none;
 }
 
-/* Calendario principale - Modificato per essere responsive */
+/* Stile per i pulsanti del modale */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-gray-300.rounded-lg {
+    background-color: #e0e0e0; /* Grigio chiaro per "Annulla" */
+    color: #333333; /* Testo scuro */
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-blue-600.text-white.rounded-lg {
+    background-color: #007bff; /* Blu per "Crea"/"Salva" */
+    color: #ffffff; /* Testo bianco */
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-red-600.text-white.rounded-lg {
+    background-color: #dc2626; /* Rosso scuro per "Elimina" */
+    color: #ffffff; /* Testo bianco */
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Effetti hover per i pulsanti */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-gray-300.rounded-lg:hover {
+    background-color: #d0d0d0; /* Grigio più scuro al passaggio del mouse */
+}
+
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-blue-600.text-white.rounded-lg:hover {
+    background-color: #0056b3; /* Blu più scuro al passaggio del mouse */
+}
+
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-red-600.text-white.rounded-lg:hover {
+    background-color: #b91c1c; /* Rosso più scuro al passaggio del mouse */
+}
+
+/* Testi nei modali */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .text-gray-700 {
+    color: #333333; /* Testo scuro, sovrascrive text-gray-700 */
+}
+
+/* Stile per il titolo del modale */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full h3 {
+    color: #333333; /* Testo scuro */
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+}
+
+/* Stile per textarea */
+.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Calendario principale */
 .grid-cal {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
-    background-color: white;
+    background-color: #1e293b; /* Grigio scuro */
     width: 100%;
     max-width: 100%;
-    margin: 0 auto;
 }
 
 .day-header {
@@ -50,8 +161,8 @@ body {
     font-size: clamp(8px, 2.5vw, 10px);
     line-height: 24px;
     text-align: center;
-    background-color: #3b82f6;
-    color: white;
+    background-color: #2563eb; /* Blu scuro */
+    color: #ffffff;
     font-weight: bold;
     border-radius: 3px;
     display: flex;
@@ -61,15 +172,15 @@ body {
 
 .day-cell {
     width: 100%;
-    height: 110px; /* Impostato a 110px per adattare il calendario allo schermo e ospitare 5 turni + nota */
+    height: 110px;
     padding: 2px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: white;
+    background-color: #334155; /* Grigio medio */
     border-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     font-size: clamp(8px, 2vw, 10px);
     position: relative;
     overflow: hidden;
@@ -88,16 +199,17 @@ body {
     justify-content: center;
     align-items: center;
     line-height: 20px;
+    color: #e2e8f0; /* Testo chiaro */
 }
 
 .today .day-number {
-    background-color: #3b82f6;
-    color: white;
+    background-color: #60a5fa; /* Blu chiaro */
+    color: #ffffff;
     border-radius: 50%;
 }
 
 .current-day {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid #60a5fa; /* Blu chiaro */
     outline-offset: -2px;
 }
 
@@ -110,14 +222,14 @@ body {
     display: none;
     width: 100%;
     text-align: center;
-    color: #333;
+    color: #1e293b; /* Testo scuro per contrasto */
     position: absolute;
     bottom: 2px;
     left: 0;
-    background-color: rgba(255, 255, 0, 0.9);
+    background-color: rgba(234, 179, 8, 0.9); /* Giallo scuro */
     padding: 2px 4px;
     border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     z-index: 10;
 }
 
@@ -138,7 +250,7 @@ body {
 
 @keyframes pulse-yellow-border {
     0% { outline: 2px solid transparent; }
-    50% { outline: 2px solid #FFFF00; }
+    50% { outline: 2px solid #eab308; } /* Giallo scuro */
     100% { outline: 2px solid transparent; }
 }
 
@@ -149,13 +261,13 @@ body {
 
 @keyframes pulse-red-border {
     0% { outline: 2px solid transparent; }
-    50% { outline: 2px solid #ff0000; }
+    50% { outline: 2px solid #dc2626; } /* Rosso scuro */
     100% { outline: 2px solid transparent; }
 }
 
 /* Sfondo rosso per festivi */
 .holiday {
-    background-color: #ff0000;
+    background-color: #dc2626; /* Rosso scuro */
 }
 
 .action-btn {
@@ -163,17 +275,17 @@ body {
     font-size: 14px;
     font-weight: bold;
     border-radius: 6px;
-    color: white;
+    color: #ffffff;
     text-align: center;
     margin-bottom: 8px;
 }
 
 .stats-container {
-    background-color: #3b82f6;
+    background-color: #1e293b; /* Grigio scuro */
     border-radius: 8px;
     padding: 12px;
     margin-top: 12px;
-    color: white;
+    color: #ffffff;
     text-align: center;
 }
 
@@ -181,18 +293,21 @@ body {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 8px;
+    color: #475569; /* Grigio medio-scuro per titoli */
 }
 
 .stats-value {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 12px;
+    color: #ffffff; /* Bianco per Totale ore quest'anno */
 }
 
 .stats-subtitle {
     font-size: 14px;
     margin-bottom: 8px;
     font-weight: bold;
+    color: #475569; /* Grigio medio-scuro per titoli */
 }
 
 .stats-grid {
@@ -203,20 +318,23 @@ body {
 }
 
 .stats-item {
-    background-color: rgba(255,255,255,0.2);
+    background-color: #334155; /* Grigio medio */
     border-radius: 6px;
     padding: 8px;
+    color: #ffffff; /* Bianco per statistiche annuali */
 }
 
 .stats-item-title {
     font-size: 12px;
     margin-bottom: 4px;
     font-weight: bold;
+    color: #ffffff; /* Bianco per nomi turni */
 }
 
 .stats-item-value {
     font-size: 16px;
     font-weight: bold;
+    color: #ffffff; /* Bianco per conteggi e ore */
 }
 
 #statsPage {
@@ -229,7 +347,7 @@ body {
     font-weight: bold;
     text-align: center;
     margin-bottom: 16px;
-    color: #3bea56;
+    color: #475569; /* Grigio medio-scuro per titoli */
 }
 
 .stats-section {
@@ -240,12 +358,12 @@ body {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 8px;
-    color: #1f2937;
+    color: #475569; /* Grigio medio-scuro per titoli */
 }
 
 .back-btn {
-    background-color: #3b82f6;
-    color: white;
+    background-color: #1e293b; /* Grigio scuro per Torna al Calendario */
+    color: #ffffff; /* Bianco per testo */
     padding: 10px 16px;
     border-radius: 6px;
     font-weight: bold;
@@ -255,42 +373,24 @@ body {
     font-size: 16px;
 }
 
-.action-buttons-container {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.action-btn-flex {
-    flex: 1;
-    padding: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 6px;
-    color: white;
-    text-align: center;
-}
-
 .shift-stats-container {
-    background-color: #3b82f6;
+    background-color: #1e293b; /* Grigio scuro */
     border-radius: 8px;
     padding: 12px;
     margin-top: 8px;
-    color: white;
+    color: #ffffff;
 }
 
 .notes-container {
-    background-color: #3b82f6;
+    background-color: #1e293b; /* Grigio scuro */
     border-radius: 8px;
     padding: 12px;
-    color: white;
+    color: #ffffff;
 }
 
-.month-title {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    color: #1f2937;
+/* Seleziona Turno */
+#mainPage .text-center.font-bold.mb-2 {
+    color: #475569; /* Grigio medio-scuro, scuro e non chiaro */
 }
 
 .shift-badge {
@@ -351,8 +451,8 @@ body {
 }
 
 .selected-shift {
-    background-color: #3b82f6;
-    color: white;
+    background-color: #2563eb; /* Blu scuro */
+    color: #ffffff;
 }
 
 .shift-selector-container {
@@ -361,10 +461,10 @@ body {
     gap: 8px;
     margin-top: 12px;
     justify-content: center;
-    background-color: white;
+    background-color: #1e293b; /* Grigio scuro, sovrascrive bg-white */
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .shift-option {
@@ -372,8 +472,9 @@ body {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    border: 2px solid #e2e8f0;
+    border: 2px solid #475569; /* Grigio medio */
     font-size: 12px;
+    color: #e2e8f0; /* Testo chiaro */
 }
 
 .clear-shift {
@@ -381,8 +482,8 @@ body {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    background-color: #f87171;
-    color: white;
+    background-color: #dc2626; /* Rosso scuro */
+    color: #ffffff;
     border: none;
     font-size: 12px;
 }
@@ -392,7 +493,7 @@ body {
     top: 2px;
     left: 2px;
     font-size: 10px;
-    color: #3b82f6;
+    color: #60a5fa; /* Blu chiaro */
     cursor: pointer;
     z-index: 11;
 }
@@ -433,16 +534,16 @@ body {
     right: 0;
     margin-top: 8px;
     width: 160px;
-    background: #ffffff; /* Sfondo bianco opaco */
-    border: 1px solid #d1d5db; /* Bordo grigio chiaro */
+    background: #1e293b; /* Grigio scuro */
+    border: 1px solid #475569; /* Grigio medio */
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Ombra più scura */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     transform: translateY(-10px);
     opacity: 0;
     visibility: hidden;
     transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
-    z-index: 2000; /* z-index più alto per coprire gli elementi sottostanti */
+    z-index: 2000;
 }
 
 .language-dropdown.active {
@@ -455,7 +556,7 @@ body {
     display: flex;
     align-items: center;
     padding: 10px 16px;
-    color: #111827; /* Testo grigio scuro per alto contrasto */
+    color: #e2e8f0; /* Testo chiaro */
     font-size: 14px;
     transition: background 0.2s, color 0.2s;
 }
@@ -467,8 +568,8 @@ body {
 }
 
 .language-option:hover {
-    background: #e5e7eb; /* Grigio chiaro per hover */
-    color: #1f2937; /* Mantiene testo scuro */
+    background: #334155; /* Grigio medio */
+    color: #e2e8f0;
 }
 
 .nav-arrow {
@@ -480,7 +581,7 @@ body {
     background: none;
     border: none;
     box-shadow: none;
-    color: #3b82f6;
+    color: #60a5fa; /* Blu chiaro */
     cursor: pointer;
 }
 
@@ -493,7 +594,7 @@ body {
     background: none;
     border: none;
     font-size: 24px;
-    color: #3b82f6;
+    color: #60a5fa; /* Blu chiaro */
     cursor: pointer;
     padding: 8px;
 }
@@ -507,8 +608,8 @@ body {
     position: absolute;
     right: 0;
     top: 100%;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
+    background: #1e293b; /* Grigio scuro */
+    border: 1px solid #475569; /* Grigio medio */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -524,8 +625,8 @@ body {
     align-items: center;
     padding: 12px 16px;
     font-size: 15px;
-    color: #1f2937;
-    border-bottom: 1px solid #e5e7eb;
+    color: #e2e8f0; /* Testo chiaro */
+    border-bottom: 1px solid #475569; /* Grigio medio */
     background: none;
     width: 100%;
     text-align: left;
@@ -538,10 +639,10 @@ body {
 }
 
 .hamburger-menu-content .menu-item:hover {
-    background: #eff6ff;
+    background: #334155; /* Grigio medio */
 }
 
-/* Annual View Styles - Modificato per essere responsive */
+/* Annual View Styles */
 #annualPage {
     display: none;
     padding: 16px;
@@ -552,22 +653,26 @@ body {
     grid-template-columns: 1fr;
     gap: 16px;
     margin-bottom: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .annual-month {
-    background-color: white;
+    background-color: #1e293b; /* Grigio scuro */
     border-radius: 8px;
     padding: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
 }
 
 .annual-month-title {
     font-weight: bold;
     text-align: center;
     margin-bottom: 8px;
-    color: #3b82f6;
+    color: #475569; /* Grigio medio-scuro per titoli */
 }
 
 .annual-month-grid {
@@ -575,6 +680,8 @@ body {
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .annual-day-cell {
@@ -586,11 +693,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: #334155; /* Grigio medio */
+    color: #e2e8f0; /* Testo chiaro */
 }
 
 .annual-day-cell.holiday {
-    background-color: #ff0000;
-    color: white;
+    background-color: #dc2626; /* Rosso scuro */
+    color: #ffffff;
 }
 
 .annual-day-cell.has-shift {
@@ -599,7 +712,7 @@ body {
 }
 
 .annual-day-cell.today {
-    outline: 1px solid #3b82f6;
+    outline: 1px solid #60a5fa; /* Blu chiaro */
 }
 
 /* Media query per schermi piccoli */
@@ -635,5 +748,17 @@ body {
     .annual-day-cell {
         font-size: 8px;
         height: 14px;
+    }
+
+    .month-title {
+        font-size: clamp(1.2rem, 4vw, 1.5rem); /* Dimensione ridotta per schermi piccoli */
+    }
+
+    .left-header .fa-calendar-alt {
+        font-size: 16px;
+    }
+
+    .left-header h1 {
+        font-size: 1rem;
     }
 }
