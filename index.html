@@ -9,7 +9,7 @@
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome per icone -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <!-- Flag Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.5/css/flag-icons.min.css">
     <!-- jsPDF -->
@@ -30,13 +30,16 @@
                     <h1 class="text-xl font-bold text-blue-800" data-translate="title">
                         <i class="fas fa-calendar-alt mr-1 text-orange-500"></i> AppTurni
                     </h1>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
                 <div class="hamburger-menu">
-                    <button id="hamburgerButton" class="hamburger-button" aria-label="Open Menu">
+                    <button id="hamburger-btn" class="hamburger-button" aria-label="Open Menu">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <div id="hamburgerMenu" class="hamburger-menu-content">
-                        <button id="viewAnnual" class="menu-item" data-translate="viewAnnual">
+                    <div id="hamburger-menu-content" class="hamburger-menu-content">
+                        <button id="view-annual-btn" class="menu-item" data-translate="viewAnnual">
                             <i class="fas fa-calendar-alt mr-2"></i> Visualizzazione Annuale
                         </button>
                         <button onclick="openCreateShiftModal()" class="menu-item" data-translate="addShift">
@@ -56,15 +59,15 @@
             </div>
             <!-- Seconda riga: Freccia Precedente, Nome Mese, Bandiera, Freccia Successiva -->
             <div class="flex justify-between items-center">
-                <button onclick="prevMonth()" class="nav-arrow" aria-label="Previous Month">
+                <button onclick="prevMonth()" class="nav-btn" aria-label="Previous Month">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <h2 id="monthYear" class="month-title flex-1 text-center"></h2>
+                <h2 id="month-name" class="month-title flex-1 text-center"></h2>
                 <div class="language-container">
-                    <button id="languageButton" class="language-button">
-                        <span id="languageFlag" class="flag-icon flag-icon-it"></span>
+                    <button id="language-btn" class="language-button">
+                        <span id="language-flag" class="flag-icon flag-icon-it"></span>
                     </button>
-                    <div id="languageDropdown" class="language-dropdown">
+                    <div id="language-menu" class="language-options">
                         <button class="language-option" data-lang="it"><span class="flag-icon flag-icon-it"></span> Italiano</button>
                         <button class="language-option" data-lang="en"><span class="flag-icon flag-icon-gb"></span> English</button>
                         <button class="language-option" data-lang="fr"><span class="flag-icon flag-icon-fr"></span> Français</button>
@@ -72,109 +75,109 @@
                         <button class="language-option" data-lang="es"><span class="flag-icon flag-icon-es"></span> Español</button>
                     </div>
                 </div>
-                <button onclick="nextMonth()" class="nav-arrow" aria-label="Next Month">
+                <button onclick="nextMonth()" class="nav-btn" aria-label="Next Month">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
         
-        <div id="mainPage">
+        <div id="monthly-view">
             <!-- Calendario -->
-            <div class="grid-cal mb-4" id="calendar">
-                <div class="day-header" data-translate="monday">LUN</div>
-                <div class="day-header" data-translate="tuesday">MAR</div>
-                <div class="day-header" data-translate="wednesday">MER</div>
-                <div class="day-header" data-translate="thursday">GIO</div>
-                <div class="day-header" data-translate="friday">VEN</div>
-                <div class="day-header" data-translate="saturday">SAB</div>
-                <div class="day-header" data-translate="sunday">DOM</div>
+            <div class="grid-cal mb-4" id="calendar-view">
+                <div class="day-header-cell" data-day="monday">LUN</div>
+                <div class="day-header-cell" data-day="tuesday">MAR</div>
+                <div class="day-header-cell" data-day="wednesday">MER</div>
+                <div class="day-header-cell" data-day="thursday">GIO</div>
+                <div class="day-header-cell" data-day="friday">VEN</div>
+                <div class="day-header-cell" data-day="saturday">SAB</div>
+                <div class="day-header-cell" data-day="sunday">DOM</div>
             </div>
             
             <!-- Seleziona Turno -->
             <div class="bg-white p-3 rounded-lg shadow mb-4">
                 <div class="text-center font-bold mb-2" data-translate="selectShift">Seleziona Turno</div>
-                <div class="shift-selector-container" id="shiftSelector"></div>
-                <button onclick="clearShift()" class="clear-shift w-full mt-2" data-translate="clearShift">
-                    <i class="fas fa-times mr-1"></i> Rimuovi Turno
+                <div class="shift-selector" id="shift-selector"></div>
+                <button onclick="clearShift()" class="clear-shift-btn w-full mt-2" data-translate="clearShift">
+                    <i class="fas fa-times mr-1"></i> Clear Shift
                 </button>
             </div>
         </div>
         
-        <div id="statsPage">
-            <h1 class="stats-page-title" data-translate="statsTitle">
+        <div id="stats-view" class="hidden">
+            <h1 class="stats-title" data-translate="statsTitle">
                 <i class="fas fa-chart-bar mr-1"></i> Statistiche Complete
             </h1>
-            <div class="stats-section">
-                <div class="stats-section-title" data-translate="workedHours">
+            <div class="stats-block">
+                <div class="stats-header" data-translate="workedHours">
                     <i class="fas fa-clock mr-1"></i> Ore Lavorate
                 </div>
-                <div class="stats-container">
-                    <div id="statsWorkedHours" class="stats-value">0.00</div>
-                    <div class="stats-subtitle" data-translate="totalHoursMonth">Totale ore questo mese</div>
+                <div class="stats-content">
+                    <div id="worked-hours" class="stats-value">0.00</div>
+                    <div class="stats-subtext" data-translate="totalHoursMonth">Total hours this month</div>
                 </div>
             </div>
-            <div class="stats-section">
-                <div class="stats-section-title" data-translate="shifts">
+            <div class="stats-block">
+                <div class="stats-header" data-translate="shifts">
                     <i class="fas fa-calendar-day mr-1"></i> Turni
                 </div>
-                <div class="shift-stats-container">
-                    <div id="statsShiftsDetails" class="stats-grid"></div>
+                <div class="shift-stats-content">
+                    <div id="shifts-details" class="stats-grid"></div>
                 </div>
             </div>
-            <div class="stats-section">
-                <div class="stats-section-title" data-translate="notes">
+            <div class="stats-block">
+                <div class="stats-header" data-translate="notes">
                     <i class="fas fa-sticky-note mr-1"></i> Note
                 </div>
-                <div class="notes-container">
-                    <div id="statsNotesList"></div>
+                <div class="notes-content">
+                    <div id="notes-list"></div>
                 </div>
             </div>
-            <button onclick="showMainPage()" class="back-btn" data-translate="backToCalendar">
+            <button onclick="showMonthlyView()" class="back-btn" data-translate="backToCalendar">
                 <i class="fas fa-arrow-left mr-1"></i> Torna al Calendario
             </button>
         </div>
         
-        <div id="annualPage">
-            <h1 class="stats-page-title" data-translate="annualTitle">
+        <div id="annual-view" class="hidden">
+            <h1 class="stats-title" data-translate="annualTitle">
                 <i class="fas fa-calendar-alt mr-1"></i> Visualizzazione Annuale
             </h1>
-            <div class="annual-container" id="annualCalendar"></div>
-            <div class="stats-section">
-                <div class="stats-section-title" data-translate="annualStats">
+            <div class="annual-content" id="annual-calendar"></div>
+            <div class="stats-block">
+                <div class="stats-header" data-translate="annualStats">
                     <i class="fas fa-chart-pie mr-1"></i> Statistiche Annuali
                 </div>
-                <div class="stats-container">
-                    <div id="annualWorkedHours" class="stats-value">0.00</div>
-                    <div class="stats-subtitle" data-translate="totalHoursYear">Totale ore quest'anno</div>
+                <div class="stats-content">
+                    <div id="annual-hours" class="stats-value">0.00</div>
+                    <div class="stats-subtext" data-translate="totalHoursYear">Total hours this year</div>
                 </div>
-                <div class="shift-stats-container">
-                    <div id="annualShiftsDetails" class="stats-grid"></div>
+                <div class="shift-stats-content">
+                    <div id="annual-shifts-details" class="stats-grid"></div>
                 </div>
             </div>
-            <button onclick="showMainPage()" class="back-btn" data-translate="backToCalendar">
+            <button onclick="showMonthlyView()" class="back-btn" data-translate="backToCalendar">
                 <i class="fas fa-arrow-left mr-1"></i> Torna al Calendario
             </button>
         </div>
         
         <!-- Modali -->
-        <div id="createShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div id="create-shift-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="createShiftTitle">Crea Nuovo Turno</h3>
                 <div class="mb-4">
-                    <label for="shiftName" class="block text-sm font-medium text-gray-700" data-translate="shiftNameLabel">Nome Turno (es. Mattina)</label>
-                    <input type="text" id="shiftName" class="w-full p-2 border rounded-lg" placeholder="Inserisci nome turno" data-translate-placeholder="shiftNamePlaceholder">
+                    <label for="shift-name-input" class="block text-sm font-medium text-gray-700" data-translate="shiftNameLabel">Nome Turno (es. Mattina)</label>
+                    <input type="text" id="shift-name-input" class="w-full p-2 border rounded-lg" placeholder="Inserisci nome turno" data-translate-placeholder="shiftNamePlaceholder">
                 </div>
                 <div class="mb-4">
-                    <label for="shiftAbbreviation" class="block text-sm font-medium text-gray-700" data-translate="shiftAbbreviationLabel">Abbreviazione (es. M, opzionale)</label>
-                    <input type="text" id="shiftAbbreviation" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione" data-translate-placeholder="shiftAbbreviationPlaceholder">
+                    <label for="shift-abbr-input" class="block text-sm font-medium text-gray-700" data-translate="shiftAbbreviationLabel">Abbreviazione (es. M, opzionale)</label>
+                    <input type="text" id="shift-abbr-input" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione" data-translate-placeholder="shiftAbbreviationPlaceholder">
                 </div>
                 <div class="mb-4">
-                    <label for="shiftHours" class="block text-sm font-medium text-gray-700" data-translate="shiftHoursLabel">Ore (HH:MM)</label>
-                    <input type="text" id="shiftHours" class="w-full p-2 border rounded-lg" placeholder="Es. 07:15" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" data-translate-placeholder="shiftHoursPlaceholder">
+                    <label for="shift-hours-input" class="block text-sm font-medium text-gray-700" data-translate="shiftHoursLabel">Ore (HH:MM)</label>
+                    <input type="text" id="shift-hours-input" class="w-full p-2 border rounded-lg" placeholder="Es. 07:15" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" data-translate-placeholder="shiftHoursPlaceholder">
                 </div>
                 <div class="mb-4">
-                    <label for="shiftColor" class="block text-sm font-medium text-gray-700" data-translate="shiftColorLabel">Colore Turno</label>
-                    <input type="color" id="shiftColor" class="w-full h-10 p-1 border rounded-lg" value="#fef3c7">
+                    <label for="shift-color-input" class="block text-sm font-medium text-gray-700" data-translate="shiftColorLabel">Colore Turno</label>
+                    <input type="color" id="shift-color-input" class="w-full h-10 p-1 border rounded-lg" value="#fef3c7">
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button onclick="closeCreateShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg" data-translate="cancel">Annulla</button>
@@ -183,12 +186,12 @@
             </div>
         </div>
         
-        <div id="deleteShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div id="delete-shift-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="deleteShiftTitle">Elimina Turno</h3>
                 <div class="mb-4">
-                    <label for="deleteShiftSelect" class="block text-sm font-medium text-gray-700" data-translate="selectShiftLabel">Seleziona Turno</label>
-                    <select id="deleteShiftSelect" class="w-full p-2 border rounded-lg">
+                    <label for="delete-shift-select" class="block text-sm font-medium text-gray-700" data-translate="selectShiftLabel">Seleziona Turno</label>
+                    <select id="delete-shift-select" class="w-full p-2 border rounded-lg">
                         <option value="" data-translate="selectShiftOption">Seleziona un turno</option>
                     </select>
                 </div>
@@ -199,24 +202,24 @@
             </div>
         </div>
         
-        <div id="editShiftModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div id="edit-shift-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="editShiftTitle">Modifica Turno</h3>
                 <div class="mb-4">
-                    <label for="editShiftName" class="block text-sm font-medium text-gray-700" data-translate="shiftNameLabel">Nome Turno</label>
-                    <input type="text" id="editShiftName" class="w-full p-2 border rounded-lg">
+                    <label for="edit-shift-name" class="block text-sm font-medium text-gray-700" data-translate="shiftNameLabel">Nome Turno</label>
+                    <input type="text" id="edit-shift-name" class="w-full p-2 border rounded-lg">
                 </div>
                 <div class="mb-4">
-                    <label for="editShiftAbbreviation" class="block text-sm font-medium text-gray-700" data-translate="shiftAbbreviationLabel">Abbreviazione (opzionale)</label>
-                    <input type="text" id="editShiftAbbreviation" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione" data-translate-placeholder="shiftAbbreviationPlaceholder">
+                    <label for="edit-shift-abbr" class="block text-sm font-medium text-gray-700" data-translate="shiftAbbreviationLabel">Abbreviazione (opzionale)</label>
+                    <input type="text" id="edit-shift-abbr" class="w-full p-2 border rounded-lg" placeholder="Inserisci abbreviazione" data-translate-placeholder="shiftAbbreviationPlaceholder">
                 </div>
                 <div class="mb-4">
-                    <label for="editShiftHours" class="block text-sm font-medium text-gray-700" data-translate="shiftHoursLabel">Ore (HH:MM)</label>
-                    <input type="text" id="editShiftHours" class="w-full p-2 border rounded-lg" placeholder="Es. 07:15" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" data-translate-placeholder="shiftHoursPlaceholder">
+                    <label for="edit-shift-hours" class="block text-sm font-medium text-gray-700" data-translate="shiftHoursLabel">Ore (HH:MM)</label>
+                    <input type="text" id="edit-shift-hours" class="w-full p-2 border rounded-lg" placeholder="Es. 07:15" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" data-translate-placeholder="shiftHoursPlaceholder">
                 </div>
                 <div class="mb-4">
-                    <label for="editShiftColor" class="block text-sm font-medium text-gray-700" data-translate="shiftColorLabel">Colore Turno</label>
-                    <input type="color" id="editShiftColor" class="w-full h-10 p-1 border rounded-lg">
+                    <label for="edit-shift-color" class="block text-sm font-medium text-gray-700" data-translate="shiftColorLabel">Colore Turno</label>
+                    <input type="color" id="edit-shift-color" class="w-full h-10 p-1 border rounded-lg">
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button onclick="closeEditShiftModal()" class="px-4 py-2 bg-gray-300 rounded-lg" data-translate="cancel">Annulla</button>
@@ -225,12 +228,12 @@
             </div>
         </div>
         
-        <div id="noteModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div id="note-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h3 class="text-lg font-semibold mb-4" data-translate="noteTitle">Aggiungi/Modifica Nota</h3>
                 <div class="mb-4">
-                    <label for="noteText" class="block text-sm font-medium text-gray-700" data-translate="noteLabel">Nota</label>
-                    <textarea id="noteText" class="w-full p-2 border rounded-lg" placeholder="Inserisci una nota" rows="3" data-translate-placeholder="notePlaceholder"></textarea>
+                    <label for="note-text" class="block text-sm font-medium text-gray-700" data-translate="noteLabel">Nota</label>
+                    <textarea id="note-text" class="w-full p-2 border rounded-lg" placeholder="Inserisci una nota" rows="3" data-translate-placeholder="notePlaceholder"></textarea>
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button onclick="closeNoteModal()" class="px-4 py-2 bg-gray-300 rounded-lg" data-translate="cancel">Annulla</button>
