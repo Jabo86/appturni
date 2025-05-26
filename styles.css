@@ -1,32 +1,21 @@
 /* Stili generali */
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%); /* Gradiente scuro, sovrascrive Tailwind */
-    color: #e2e8f0; /* Testo chiaro */
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Header (per Logo, AppTurni, hamburger) */
-.header {
-    background-color: #1e293b; /* Grigio scuro per container header */
-}/* Stili generali */
-body {
-    font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%); /* Gradiente chiaro per tema chiaro */
-    color: #000000; /* Testo nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro per un contrasto migliore */
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Tema chiaro: sfondo bianco e testo nero */
+/* Tema chiaro: sfondo bianco e testo scuro */
 body:not(.dark-mode) .bg-white {
     background-color: #ffffff !important;
-    color: #000000 !important;
+    color: #1e3a8a !important; /* Blu scuro per tema chiaro */
 }
 
 /* Tema scuro */
 body.dark-mode {
     background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%) !important;
-    color: #e2e8f0 !important;
+    color: #e2e8f0 !important; /* Testo chiaro per tema scuro */
 }
 
 /* Header */
@@ -35,23 +24,23 @@ body.dark-mode {
 }
 
 .dark-mode .header {
-    background-color: #1e293b !important;
+    background-color: #1e293b !important; /* Scuro per tema scuro */
 }
 
 /* Logo */
 .left-header .fa-calendar-alt {
-    color: #eab308; /* G
-
-iallo scuro */
+    color: #eab308; /* Giallo scuro */
 }
 
 /* Titolo AppTurni */
 .left-header h1 {
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro per un contrasto migliore */
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    font-weight: bold;
 }
 
 .dark-mode .left-header h1 {
-    color: #ffffff !important;
+    color: #ffffff !important; /* Bianco per tema scuro */
 }
 
 /* Barra di navigazione */
@@ -60,17 +49,17 @@ iallo scuro */
 }
 
 .dark-mode .header .flex.justify-between.items-center:not(:first-child) {
-    background-color: #1e293b !important;
+    background-color: #1e293b !important; /* Scuro per tema scuro */
 }
 
 .month-title {
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: bold;
 }
 
 .dark-mode .month-title {
-    color: #ffffff !important;
+    color: #ffffff !important; /* Bianco per tema scuro */
 }
 
 /* Pulsante theme toggle */
@@ -105,7 +94,7 @@ iallo scuro */
 
 .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full {
     background-color: #ffffff; /* Bianco per tema chiaro */
-    color: #000000;
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     padding: 24px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -118,57 +107,57 @@ iallo scuro */
     color: #e2e8f0 !important;
 }
 
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full label {
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full label {
     display: block;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     margin-bottom: 8px;
     font-weight: 500;
 }
 
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full label {
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full label {
     color: #e2e8f0 !important;
 }
 
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full input,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full select,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full textarea {
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full select,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     background-color: #f9f9f9;
 }
 
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full input,
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full select,
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full textarea {
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input,
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full select,
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea {
     color: #e2e8f0;
     background-color: #2d3748;
     border-color: #4a5568;
 }
 
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full input::placeholder,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full textarea::placeholder {
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input::placeholder,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea::placeholder {
     color: #666666; /* Grigio scuro per tema chiaro */
 }
 
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full input::placeholder,
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full textarea::placeholder {
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input::placeholder,
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea::placeholder {
     color: #a0aec0;
 }
 
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full input:focus,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full select:focus,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full textarea:focus {
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input:focus,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full select:focus,
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea:focus {
     border-color: #60a5fa;
     outline: none;
 }
 
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full .px-4.py-2.bg-gray-300.rounded-lg {
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-gray-300.rounded-lg {
     background-color: #e0e0e0; /* Grigio chiaro per tema chiaro */
-    color: #000000;
+    color: #1e3a8a;
     padding: 8px 16px;
     border-radius: 4px;
     border: none;
@@ -176,7 +165,7 @@ iallo scuro */
     font-weight: 500;
 }
 
-.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full .px-4.py-2.bg-gray-300.rounded-lg {
+.dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-gray-300.rounded-lg {
     background-color: #4a5568;
     color: #e2e8f0;
 }
@@ -191,7 +180,7 @@ iallo scuro */
     font-weight: 500;
 }
 
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full .px-4.py-2.bg-red-600.text-white.rounded-lg {
+.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-red-600.text-white.rounded-lg {
     background-color: #dc2626;
     color: #ffffff;
     padding: 8px 16px;
@@ -218,7 +207,7 @@ iallo scuro */
 }
 
 .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .text-gray-700 {
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .text-gray-700 {
@@ -226,7 +215,7 @@ iallo scuro */
 }
 
 .bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full h3 {
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     margin-bottom: 16px;
     font-size: 1.5rem;
 }
@@ -243,12 +232,12 @@ iallo scuro */
 /* Seleziona Turno */
 .bg-white.p-3.rounded-lg.shadow.mb-4 {
     background-color: #ffffff; /* Bianco per tema chiaro */
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .bg-white.p-3.rounded-lg.shadow.mb-4 {
-    background-color: #1a202c !important; /* Scuro per tema scuro */
-    color: #e2e8f0 !important; /* Testo chiaro per tema scuro */
+    background-color: #1a202c !important;
+    color: #e2e8f0 !important;
 }
 
 /* Calendario principale */
@@ -256,13 +245,13 @@ iallo scuro */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
-    background-color: #ffffff; /* Bianco per tema chiaro */
+    background-color: #f9fafb; /* Sfondo chiaro per tema chiaro */
     width: 100%;
     max-width: 100%;
 }
 
 .dark-mode .grid-cal {
-    background-color: #1e293b !important;
+    background-color: #1e293b !important; /* Sfondo scuro per tema scuro */
 }
 
 .day-header-cell {
@@ -291,7 +280,7 @@ iallo scuro */
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: #ffffff; /* Bianco per tema chiaro */
+    background-color: #ffffff; /* Bianco puro per tema chiaro */
     border-radius: 5px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     font-size: clamp(8px, 2vw, 10px);
@@ -317,7 +306,7 @@ iallo scuro */
     justify-content: center;
     align-items: center;
     line-height: 20px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .day-number {
@@ -343,40 +332,30 @@ iallo scuro */
     text-overflow: ellipsis;
     width: 100%;
     text-align: center;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     position: absolute;
     bottom: 2px;
     left: 0;
-    background-color: rgba(234, 179, 8, 0.9);
+    background-color: rgba(234, 179, 8, 0.9); /* Giallo per le note */
     padding: 2px 4px;
     border-radius: 4px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     z-index: 10;
-    opacity: 0.9; /* Sempre visibile con leggera trasparenza */
+    opacity: 1; /* Sempre visibile */
+    visibility: visible; /* Sempre visibile */
 }
 
 .dark-mode .note-text {
     color: #e2e8f0 !important;
+    background-color: rgba(234, 179, 8, 0.9); /* Mantieni lo sfondo giallo */
 }
 
 .has-note {
-    animation: pulse-yellow-border 2s infinite;
-}
-
-@keyframes pulse-yellow-border {
-    0% { outline: 2px solid transparent; }
-    50% { outline: 2px solid #eab308; }
-    100% { outline: 2px solid transparent; }
+    outline: 2px solid #eab308; /* Bordo giallo fisso per le note */
 }
 
 .has-note.holiday {
-    animation: pulse-red-border 2s infinite;
-}
-
-@keyframes pulse-red-border {
-    0% { outline: 2px solid transparent; }
-    50% { outline: 2px solid #dc2626; }
-    100% { outline: 2px solid transparent; }
+    outline: 2px solid #dc2626; /* Bordo rosso fisso per festività con note */
 }
 
 .holiday {
@@ -398,11 +377,11 @@ iallo scuro */
 }
 
 .stats-content {
-    background-color: #ffffff; /* Bianco per tema chiaro */
+    background-color: #f9fafb; /* Sfondo chiaro per tema chiaro */
     border-radius: 8px;
     padding: 12px;
     margin-top: 12px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .stats-content {
@@ -425,7 +404,7 @@ iallo scuro */
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 12px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .stats-value {
@@ -454,33 +433,33 @@ iallo scuro */
     background-color: #f9f9f9; /* Chiaro per tema chiaro */
     border-radius: 6px;
     padding: 8px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .stats-item {
     background-color: #2d3748 !important;
-    color: #ffffff !important;
+    color: #e2e8f0 !important;
 }
 
 .stats-item-title {
     font-size: 12px;
     margin-bottom: 4px;
     font-weight: bold;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .stats-item-title {
-    color: #ffffff !important;
+    color: #e2e8f0 !important;
 }
 
 .stats-item-value {
     font-size: 16px;
     font-weight: bold;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .stats-item-value {
-    color: #ffffff !important;
+    color: #e2e8f0 !important;
 }
 
 #stats-view {
@@ -506,7 +485,7 @@ iallo scuro */
 
 .back-btn {
     background-color: #ffffff; /* Bianco per tema chiaro */
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     padding: 10px 16px;
     border-radius: 6px;
     font-weight: bold;
@@ -519,16 +498,16 @@ iallo scuro */
 
 .dark-mode .back-btn {
     background-color: #1a202c !important;
-    color: #ffffff !important;
+    color: #e2e8f0 !important;
     border-color: #4a5568;
 }
 
 .shift-stats-content {
-    background-color: #ffffff; /* Bianco per tema chiaro */
+    background-color: #f9fafb; /* Chiaro per tema chiaro */
     border-radius: 8px;
     padding: 12px;
     margin-top: 8px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .shift-stats-content {
@@ -537,10 +516,10 @@ iallo scuro */
 }
 
 .notes-content {
-    background-color: #ffffff; /* Bianco per tema chiaro */
+    background-color: #f9fafb; /* Chiaro per tema chiaro */
     border-radius: 8px;
     padding: 12px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .notes-content {
@@ -549,11 +528,11 @@ iallo scuro */
 }
 
 #monthly-view .text-center.font-bold.mb-2 {
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode #monthly-view .text-center.font-bold.mb-2 {
-    color: #ffffff !important; /* Bianco per tema scuro */
+    color: #e2e8f0 !important;
 }
 
 .shift-badge {
@@ -613,7 +592,7 @@ iallo scuro */
 
 .selected-shift {
     background-color: #2563eb;
-    color: #000000 !important; /* Nero anche per i turni selezionati */
+    color: #ffffff !important; /* Bianco per i turni selezionati */
 }
 
 .shift-selector {
@@ -622,7 +601,7 @@ iallo scuro */
     gap: 8px;
     margin-top: 12px;
     justify-content: center;
-    background-color: #ffffff; /* Bianco per tema chiaro */
+    background-color: #f9fafb; /* Chiaro per tema chiaro */
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -642,11 +621,11 @@ iallo scuro */
 }
 
 body:not(.dark-mode) .shift-selector .shift-option {
-    color: #000000 !important; /* Nero per tutti i turni in modalità chiara */
+    color: #1e3a8a !important; /* Blu scuro per tema chiaro */
 }
 
 body.dark-mode .shift-selector .shift-option {
-    color: #000000 !important; /* Nero per tutti i turni in modalità scura */
+    color: #e2e8f0 !important; /* Testo chiaro per tema scuro */
 }
 
 .dark-mode .shift-option {
@@ -684,15 +663,15 @@ body.dark-mode .shift-selector .shift-option {
 }
 
 .note-edit-btn:hover {
-    background-color: rgba(96, 165, 250, 0.2); /* Leggero sfondo al passaggio del mouse */
+    background-color: rgba(96, 165, 250, 0.2);
 }
 
 .dark-mode .note-edit-btn {
-    color: #93c5fd !important; /* Blu chiaro per tema scuro */
+    color: #93c5fd !important;
 }
 
 .dark-mode .note-edit-btn:hover {
-    background-color: rgba(147, 197, 253, 0.2); /* Leggero sfondo al passaggio del mouse */
+    background-color: rgba(147, 197, 253, 0.2);
 }
 
 .shifts-container {
@@ -757,7 +736,7 @@ body.dark-mode .shift-selector .shift-option {
     display: flex;
     align-items: center;
     padding: 10px 16px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     font-size: 14px;
     transition: background 0.2s, color 0.2s;
 }
@@ -773,8 +752,8 @@ body.dark-mode .shift-selector .shift-option {
 }
 
 .language-option:hover {
-    background: #f9f9f9; /* Chiaro per tema chiaro */
-    color: #000000;
+    background: #f9f9f9;
+    color: #1e3a8a;
 }
 
 .dark-mode .language-option:hover {
@@ -839,7 +818,7 @@ body.dark-mode .shift-selector .shift-option {
     align-items: center;
     padding: 12px 16px;
     font-size: 15px;
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
     border-bottom: 1px solid #475569;
     background: none;
     width: 100%;
@@ -857,7 +836,7 @@ body.dark-mode .shift-selector .shift-option {
 }
 
 .hamburger-menu-content .menu-item:hover {
-    background: #f9f9f9; /* Chiaro per tema chiaro */
+    background: #f9f9f9;
 }
 
 .dark-mode .hamburger-menu-content .menu-item:hover {
@@ -928,7 +907,7 @@ body.dark-mode .shift-selector .shift-option {
     text-overflow: ellipsis;
     white-space: nowrap;
     background-color: #ffffff; /* Bianco per tema chiaro */
-    color: #000000; /* Nero per tema chiaro */
+    color: #1e3a8a; /* Blu scuro per tema chiaro */
 }
 
 .dark-mode .annual-day-cell {
@@ -1002,757 +981,6 @@ body.dark-mode .shift-selector .shift-option {
     }
 
     .note-edit-btn {
-        font-size: 10px; /* Dimensione ridotta per schermi piccoli */
-    }
-}
-/* Logo (icona fa-calendar-alt) */
-.left-header .fa-calendar-alt {
-    color: #eab308; /* Giallo scuro, sovrascrive text-orange-500 */
-}
-
-/* AppTurni */
-.left-header h1 {
-    color: #ffffff; /* Bianco, sovrascrive text-blue-800 */
-}
-
-/* Barra di navigazione (frecce, mese, bandiera) */
-.header .flex.justify-between.items-center:not(:first-child) {
-    background-color: #1e293b; /* Grigio scuro per nav */
-}
-
-.month-title {
-    color: #ffffff; /* Bianco per mese */
-    font-size: clamp(1.5rem, 5vw, 2rem); /* Dimensione più grande */
-    font-weight: bold; /* Grassetto */
-}
-
-/* Sovrascrivi lo sfondo del modale (overlay) */
-.fixed.inset-0.bg-gray-800.bg-opacity-50 {
-    background-color: rgba(0, 0, 0, 0.85); /* Fondo modale scuro */
-    z-index: 1000;
-}
-
-/* Sovrascrivi il contenuto del modale */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full {
-    background-color: #ffffff; /* Sfondo chiaro per il modale */
-    color: #333333; /* Testo scuro */
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 100%;
-}
-
-/* Stile per le etichette nei modali */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full label {
-    display: block;
-    color: #333333; /* Testo scuro */
-    margin-bottom: 8px;
-    font-weight: 500;
-}
-
-/* Stile per input, select e textarea nei modali */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full select,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #333333; /* Testo scuro */
-    background-color: #f9f9f9; /* Sfondo chiaro per input */
-}
-
-/* Stile per i placeholder */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full input::placeholder,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full textarea::placeholder {
-    color: #666666; /* Grigio scuro per placeholder */
-}
-
-/* Stile per il focus */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full input:focus,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full select:focus,
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full textarea:focus {
-    border-color: #60a5fa; /* Blu chiaro */
-    outline: none;
-}
-
-/* Stile per i pulsanti del modale */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-gray-300.rounded-lg {
-    background-color: #e0e0e0; /* Grigio chiaro per "Annulla" */
-    color: #333333; /* Testo scuro */
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w.full .px-4.py-2.bg-blue-600.text-white.rounded-lg {
-    background-color: #007bff; /* Blu per "Crea"/"Salva" */
-    color: #ffffff; /* Testo bianco */
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-red-600.text-white.rounded-lg {
-    background-color: #dc2626; /* Rosso scuro per "Elimina" */
-    color: #ffffff; /* Testo bianco */
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-/* Effetti hover per i pulsanti */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-gray-300.rounded-lg:hover {
-    background-color: #d0d0d0; /* Grigio più scuro al passaggio del mouse */
-}
-
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-blue-600.text-white.rounded-lg:hover {
-    background-color: #0056b3; /* Blu più scuro al passaggio del mouse */
-}
-
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .px-4.py-2.bg-red-600.text-white.rounded-lg:hover {
-    background-color: #b91c1c; /* Rosso più scuro al passaggio del mouse */
-}
-
-/* Testi nei modali */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full .text-gray-700 {
-    color: #333333; /* Testo scuro, sovrascrive text-gray-700 */
-}
-
-/* Stile per il titolo del modale */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full h3 {
-    color: #333333; /* Testo scuro */
-    margin-bottom: 16px;
-    font-size: 1.5rem;
-}
-
-/* Stile per textarea */
-.bg-white.p-6.rounded-lg.shadow-lg.max-w.sm.w.full textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-/* Calendario principale */
-.grid-cal {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    background-color: #1e293b; /* Grigio scuro */
-    width: 100%;
-    max-width: 100%;
-}
-
-.day-header {
-    height: 24px;
-    font-size: clamp(8px, 2.5vw, 10px);
-    line-height: 24px;
-    text-align: center;
-    background-color: #2563eb; /* Blu scuro */
-    color: #ffffff;
-    font-weight: bold;
-    border-radius: 3px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.day-cell {
-    width: 100%;
-    height: 110px;
-    padding: 2px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: #334155; /* Grigio medio */
-    border-radius: 5px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    font-size: clamp(8px, 2vw, 10px);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.day-number {
-    font-weight: 700;
-    font-size: clamp(10px, 3vw, 12px);
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 20px;
-    color: #e2e8f0; /* Testo chiaro */
-}
-
-.today .day-number {
-    background-color: #60a5fa; /* Blu chiaro */
-    color: #ffffff;
-    border-radius: 50%;
-}
-
-.current-day {
-    outline: 2px solid #60a5fa; /* Blu chiaro */
-    outline-offset: -2px;
-}
-
-.note-text {
-    font-size: clamp(6px, 1.8vw, 8px);
-    line-height: 1.2;
-    word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: none;
-    width: 100%;
-    text-align: center;
-    color: #1e293b; /* Testo scuro per contrasto */
-    position: absolute;
-    bottom: 2px;
-    left: 0;
-    background-color: rgba(234, 179, 8, 0.9); /* Giallo scuro */
-    padding: 2px 4px;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-}
-
-.day-cell:hover .note-text {
-    display: block;
-}
-
-@media (max-width: 768px) {
-    .day-cell:active .note-text {
-        display: block;
-    }
-}
-
-/* Animazione contorno giallo per celle con nota */
-.has-note {
-    animation: pulse-yellow-border 2s infinite;
-}
-
-@keyframes pulse-yellow-border {
-    0% { outline: 2px solid transparent; }
-    50% { outline: 2px solid #eab308; } /* Giallo scuro */
-    100% { outline: 2px solid transparent; }
-}
-
-/* Animazione contorno rosso per celle festive con nota */
-.has-note.holiday {
-    animation: pulse-red-border 2s infinite;
-}
-
-@keyframes pulse-red-border {
-    0% { outline: 2px solid transparent; }
-    50% { outline: 2px solid #dc2626; } /* Rosso scuro */
-    100% { outline: 2px solid transparent; }
-}
-
-/* Sfondo rosso per festivi */
-.holiday {
-    background-color: #dc2626; /* Rosso scuro */
-}
-
-.action-btn {
-    padding: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 6px;
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 8px;
-}
-
-.stats-container {
-    background-color: #1e293b; /* Grigio scuro */
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 12px;
-    color: #ffffff;
-    text-align: center;
-}
-
-.stats-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #475569; /* Grigio medio-scuro per titoli */
-}
-
-.stats-value {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: #ffffff; /* Bianco per Totale ore quest'anno */
-}
-
-.stats-subtitle {
-    font-size: 14px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #475569; /* Grigio medio-scuro per titoli */
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    text-align: center;
-}
-
-.stats-item {
-    background-color: #334155; /* Grigio medio */
-    border-radius: 6px;
-    padding: 8px;
-    color: #ffffff; /* Bianco per statistiche annuali */
-}
-
-.stats-item-title {
-    font-size: 12px;
-    margin-bottom: 4px;
-    font-weight: bold;
-    color: #ffffff; /* Bianco per nomi turni */
-}
-
-.stats-item-value {
-    font-size: 16px;
-    font-weight: bold;
-    color: #ffffff; /* Bianco per conteggi e ore */
-}
-
-#statsPage {
-    display: none;
-    padding: 16px;
-}
-
-.stats-page-title {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 16px;
-    color: #475569; /* Grigio medio-scuro per titoli */
-}
-
-.stats-section {
-    margin-bottom: 20px;
-}
-
-.stats-section-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #475569; /* Grigio medio-scuro per titoli */
-}
-
-.back-btn {
-    background-color: #1e293b; /* Grigio scuro per Torna al Calendario */
-    color: #ffffff; /* Bianco per testo */
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-weight: bold;
-    margin-top: 16px;
-    display: block;
-    text-align: center;
-    font-size: 16px;
-}
-
-.shift-stats-container {
-    background-color: #1e293b; /* Grigio scuro */
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 8px;
-    color: #ffffff;
-}
-
-.notes-container {
-    background-color: #1e293b; /* Grigio scuro */
-    border-radius: 8px;
-    padding: 12px;
-    color: #ffffff;
-}
-
-/* Seleziona Turno */
-#mainPage .text-center.font-bold.mb-2 {
-    color: #475569; /* Grigio medio-scuro, scuro e non chiaro */
-}
-
-.shift-badge {
-    font-weight: bold;
-    padding: 0;
-    border-radius: 6px;
-    margin: 1px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Classi per dimensioni del testo in base alla lunghezza del testo */
-.shift-badge.short-text {
-    font-size: clamp(10px, 3vw, 12px);
-}
-
-.shift-badge.medium-text {
-    font-size: clamp(8px, 2.5vw, 10px);
-}
-
-.shift-badge.long-text {
-    font-size: clamp(6px, 2vw, 8px);
-}
-
-/* Altezza e dimensioni in base al numero di turni */
-.shift-count-1 {
-    height: 40px;
-}
-
-.shift-count-2 {
-    height: 25px;
-}
-
-.shift-count-3 {
-    height: 18px;
-}
-
-.shift-count-4 {
-    height: 15px;
-}
-
-.shift-count-5 {
-    height: 12px;
-}
-
-.single-shift {
-    border-radius: 8px;
-    width: 100%;
-    margin: 0 auto;
-    box-sizing: border-box;
-}
-
-.selected-shift {
-    background-color: #2563eb; /* Blu scuro */
-    color: #ffffff;
-}
-
-.shift-selector-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-    justify-content: center;
-    background-color: #1e293b; /* Grigio scuro, sovrascrive bg-white */
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.shift-option {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 2px solid #475569; /* Grigio medio */
-    font-size: 12px;
-    color: #e2e8f0; /* Testo chiaro */
-}
-
-.clear-shift {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #dc2626; /* Rosso scuro */
-    color: #ffffff;
-    border: none;
-    font-size: 12px;
-}
-
-.note-edit-btn {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    font-size: 10px;
-    color: #60a5fa; /* Blu chiaro */
-    cursor: pointer;
-    z-index: 11;
-}
-
-.shifts-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 12px;
-}
-
-.language-container {
-    position: relative;
-    display: inline-block;
-}
-
-.language-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.language-button .flag-icon {
-    width: 24px;
-    height: 24px;
-}
-
-.language-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 8px;
-    width: 160px;
-    background: #1e293b; /* Grigio scuro */
-    border: 1px solid #475569; /* Grigio medio */
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-    transform: translateY(-10px);
-    opacity: 0;
-    visibility: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
-    z-index: 2000;
-}
-
-.language-dropdown.active {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-}
-
-.language-option {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    color: #e2e8f0; /* Testo chiaro */
-    font-size: 14px;
-    transition: background 0.2s, color 0.2s;
-}
-
-.language-option .flag-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-}
-
-.language-option:hover {
-    background: #334155; /* Grigio medio */
-    color: #e2e8f0;
-}
-
-.nav-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: none;
-    box-shadow: none;
-    color: #60a5fa; /* Blu chiaro */
-    cursor: pointer;
-}
-
-.nav-arrow i {
-    font-size: 20px;
-}
-
-/* Hamburger Menu */
-.hamburger-button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #60a5fa; /* Blu chiaro */
-    cursor: pointer;
-    padding: 8px;
-}
-
-.hamburger-menu {
-    position: relative;
-}
-
-.hamburger-menu-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: #1e293b; /* Grigio scuro */
-    border: 1px solid #475569; /* Grigio medio */
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    min-width: 180px;
-}
-
-.hamburger-menu-content.active {
-    display: block;
-}
-
-.hamburger-menu-content .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    font-size: 15px;
-    color: #e2e8f0; /* Testo chiaro */
-    border-bottom: 1px solid #475569; /* Grigio medio */
-    background: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.hamburger-menu-content .menu-item:last-child {
-    border-bottom: none;
-}
-
-.hamburger-menu-content .menu-item:hover {
-    background: #334155; /* Grigio medio */
-}
-
-/* Annual View Styles */
-#annualPage {
-    display: none;
-    padding: 16px;
-}
-
-.annual-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.annual-month {
-    background-color: #1e293b; /* Grigio scuro */
-    border-radius: 8px;
-    padding: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.annual-month-title {
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 8px;
-    color: #475569; /* Grigio medio-scuro per titoli */
-}
-
-.annual-month-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.annual-day-cell {
-    font-size: clamp(8px, 2.5vw, 10px);
-    text-align: center;
-    padding: 2px;
-    border-radius: 2px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    background-color: #334155; /* Grigio medio */
-    color: #e2e8f0; /* Testo chiaro */
-}
-
-.annual-day-cell.holiday {
-    background-color: #dc2626; /* Rosso scuro */
-    color: #ffffff;
-}
-
-.annual-day-cell.has-shift {
-    font-weight: bold;
-    border-radius: 2px;
-}
-
-.annual-day-cell.today {
-    outline: 1px solid #60a5fa; /* Blu chiaro */
-}
-
-/* Media query per schermi piccoli */
-@media (max-width: 400px) {
-    .grid-cal {
-        grid-template-columns: repeat(7, 1fr);
-    }
-
-    .day-cell {
-        font-size: 8px;
-    }
-
-    .day-number {
         font-size: 10px;
-    }
-
-    .shift-badge {
-        font-size: clamp(6px, 2vw, 8px);
-    }
-
-    .note-text {
-        font-size: 6px;
-    }
-
-    .annual-container {
-        grid-template-columns: 1fr;
-    }
-
-    .annual-month-grid {
-        grid-template-columns: repeat(7, 1fr);
-    }
-
-    .annual-day-cell {
-        font-size: 8px;
-        height: 14px;
-    }
-
-    .month-title {
-        font-size: clamp(1.2rem, 4vw, 1.5rem); /* Dimensione ridotta per schermi piccoli */
-    }
-
-    .left-header .fa-calendar-alt {
-        font-size: 16px;
-    }
-
-    .left-header h1 {
-        font-size: 1rem;
     }
 }
