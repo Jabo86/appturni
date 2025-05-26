@@ -1,3 +1,5 @@
+// script.js
+
 // Variabili globali
 let shifts = {};
 const holidays = [
@@ -343,16 +345,11 @@ const translations = {
 
 // Funzioni di supporto
 function getTextLengthClass(text) {
-    try {
-        const length = text?.length || 0;
-        if (length <= 4) return 'short-text';
-        if (length <= 6) return 'medium-text';
-        if (length <= 8) return 'long-text';
-        return 'very-long-text';
-    } catch (e) {
-        console.error('Error in getTextLengthClass:', e);
-        return 'medium-text';
-    }
+    const length = text?.length || 0;
+    if (length <= 4) return 'short-text';
+    if (length <= 6) return 'medium-text';
+    if (length <= 8) return 'long-text';
+    return 'very-long-text';
 }
 
 function isDarkColor(hex) {
@@ -376,7 +373,6 @@ function storageAvailable(type) {
         storage.removeItem(x);
         return true;
     } catch (e) {
-        console.error('Error in storageAvailable:', e);
         return false;
     }
 }
@@ -391,6 +387,7 @@ function saveShift(shiftKey, shiftValue) {
             } else {
                 localStorage.removeItem(shiftKey);
             }
+            console.log(`Saved shift: ${shiftKey}`, shiftValue); // Debug
         }
     } catch (e) {
         console.error('Error in saveShift:', e);
@@ -415,6 +412,7 @@ function saveCustomShifts() {
     try {
         if (isStorageAvailable) {
             localStorage.setItem('customShifts', JSON.stringify(shifts));
+            console.log('Saved custom shifts:', shifts); // Debug
         }
     } catch (e) {
         console.error('Error in saveCustomShifts:', e);
@@ -424,11 +422,11 @@ function saveCustomShifts() {
 
 function loadCustomShifts() {
     try {
-        console.log('Loading custom shifts');
         if (isStorageAvailable) {
             const customShifts = localStorage.getItem('customShifts');
             if (customShifts) {
                 shifts = JSON.parse(customShifts);
+                console.log('Loaded custom shifts:', shifts); // Debug
             }
         }
     } catch (e) {
@@ -438,9 +436,18 @@ function loadCustomShifts() {
 
 function timeToDecimal(time) {
     try {
-        if (!time || !time.includes(':')) return 0;
+        if (!time || !time.includes(':')) {
+            console.warn('Invalid time format:', time);
+            return 0;
+        }
         const [hours, minutes] = time.split(':').map(Number);
-        return hours + (minutes / 60);
+        if (isNaN(hours) || isNaN(minutes) || minutes < 0 || minutes >= 60) {
+            console.warn('Invalid hours or minutes:', hours, minutes);
+            return 0;
+        }
+        const decimal = hours + (minutes / 60);
+        console.log(`timeToDecimal: ${time} -> ${decimal.toFixed(4)}`); // Debug
+        return decimal;
     } catch (e) {
         console.error('Error in timeToDecimal:', e);
         return 0;
@@ -449,9 +456,15 @@ function timeToDecimal(time) {
 
 function decimalToTime(decimal) {
     try {
+        if (isNaN(decimal) || decimal < 0) {
+            console.warn('Invalid decimal value:', decimal);
+            return '0:00';
+        }
         const hours = Math.floor(decimal);
         const minutes = Math.round((decimal - hours) * 60);
-        return `${hours}:${minutes.toString().padStart(2, '0')}`;
+        const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
+        console.log(`decimalToTime: ${decimal.toFixed(4)} -> ${formattedTime}`); // Debug
+        return formattedTime;
     } catch (e) {
         console.error('Error in decimalToTime:', e);
         return '0:00';
@@ -472,30 +485,20 @@ function updateTranslations(lang) {
                 } else {
                     element.textContent = translations[lang][key];
                 }
-            } else {
-                console.warn(`Translation missing for key "${key}" in language "${lang}"`);
             }
         });
         document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
             const key = element.getAttribute('data-translate-placeholder');
             if (translations[lang][key]) {
                 element.placeholder = translations[lang][key];
-            } else {
-                console.warn(`Placeholder translation missing for key "${key}" in language "${lang}"`);
             }
         });
         document.title = translations[lang].title;
-        document.querySelectorAll('.note-edit-btn').forEach(btn => {
-            btn.title = translations[lang].editNote;
-        });
-        const monthYearElement = document.getElementById('monthYear');
-        if (monthYearElement) {
-            monthYearElement.textContent = `${translations[lang].monthNames[currentMonth]} ${currentYear}`;
+        const monthNameElement = document.getElementById('month-name');
+        if (monthNameElement) {
+            monthNameElement.textContent = `${translations[lang].monthNames[currentMonth]} ${currentYear}`;
         }
-        const dayHeaders = document.querySelectorAll('.day-header');
-        dayHeaders.forEach((header, index) => {
-            header.textContent = translations[lang].dayNames[index];
-        });
+        console.log(`Updated translations to ${lang}`); // Debug
     } catch (e) {
         console.error('Error in updateTranslations:', e);
     }
@@ -503,21 +506,16 @@ function updateTranslations(lang) {
 
 const originalAlert = window.alert;
 window.alert = function(message) {
-    try {
-        const lang = localStorage.getItem('selectedLanguage') || 'it';
-        const translatedMessage = translations[lang][message] || message;
-        originalAlert(translatedMessage);
-    } catch (e) {
-        console.error('Error in alert:', e);
-        originalAlert(message);
-    }
+    const lang = localStorage.getItem('selectedLanguage') || 'it';
+    const translatedMessage = translations[lang][message] || message;
+    originalAlert(translatedMessage);
 };
 
 function initializeLanguageSelector() {
     try {
-        const languageButton = document.getElementById('languageButton');
-        const languageDropdown = document.getElementById('languageDropdown');
-        const languageFlagSpan = document.getElementById('languageFlag');
+        const languageButton = document.getElementById('language-btn');
+        const languageMenu = document.getElementById('language-menu');
+        const languageFlag = document.getElementById('language-flag');
         const languageOptions = document.querySelectorAll('.language-option');
         const savedLanguage = localStorage.getItem('selectedLanguage') || 'it';
         const languageMap = {
@@ -528,16 +526,17 @@ function initializeLanguageSelector() {
             'fr': { name: 'Français', flag: 'flag-icon-fr' }
         };
 
-        if (languageFlagSpan) {
-            languageFlagSpan.className = `flag-icon ${languageMap[savedLanguage].flag}`;
+        if (languageFlag) {
+            languageFlag.className = `flag-icon ${languageMap[savedLanguage].flag}`;
         }
         updateTranslations(savedLanguage);
 
-        if (languageButton && languageDropdown) {
+        if (languageButton && languageMenu) {
             languageButton.addEventListener('click', (e) => {
                 e.stopPropagation();
-                languageDropdown.classList.toggle('active');
+                languageMenu.classList.toggle('active');
                 languageButton.classList.toggle('active');
+                console.log('Toggled language menu'); // Debug
             });
 
             languageOptions.forEach(option => {
@@ -545,19 +544,20 @@ function initializeLanguageSelector() {
                     e.stopPropagation();
                     const lang = option.getAttribute('data-lang');
                     if (languageMap[lang]) {
-                        languageFlagSpan.className = `flag-icon ${languageMap[lang].flag}`;
+                        languageFlag.className = `flag-icon ${languageMap[lang].flag}`;
                         localStorage.setItem('selectedLanguage', lang);
-                        languageDropdown.classList.remove('active');
+                        languageMenu.classList.remove('active');
                         languageButton.classList.remove('active');
                         updateTranslations(lang);
                         renderCalendar();
+                        console.log(`Selected language: ${lang}`); // Debug
                     }
                 });
             });
 
             document.addEventListener('click', (e) => {
-                if (!languageButton.contains(e.target) && !languageDropdown.contains(e.target)) {
-                    languageDropdown.classList.remove('active');
+                if (!languageButton.contains(e.target) && !languageMenu.contains(e.target)) {
+                    languageMenu.classList.remove('active');
                     languageButton.classList.remove('active');
                 }
             });
@@ -569,21 +569,22 @@ function initializeLanguageSelector() {
 
 function initializeHamburgerMenu() {
     try {
-        const hamburgerButton = document.getElementById('hamburgerButton');
-        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const hamburgerButton = document.getElementById('hamburger-btn');
+        const hamburgerMenu = document.getElementById('hamburger-menu-content');
         if (hamburgerButton && hamburgerMenu) {
             hamburgerButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 hamburgerMenu.classList.toggle('active');
+                console.log('Toggled hamburger menu'); // Debug
             });
             document.addEventListener('click', (e) => {
                 if (!hamburgerButton.contains(e.target) && !hamburgerMenu.contains(e.target)) {
                     hamburgerMenu.classList.remove('active');
                 }
             });
-            const viewAnnualBtn = document.getElementById('viewAnnual');
+            const viewAnnualBtn = document.getElementById('view-annual-btn');
             if (viewAnnualBtn) {
-                viewAnnualBtn.addEventListener('click', showAnnualPage);
+                viewAnnualBtn.addEventListener('click', showAnnualView);
             }
         }
     } catch (e) {
@@ -591,19 +592,46 @@ function initializeHamburgerMenu() {
     }
 }
 
+function initializeThemeToggle() {
+    try {
+        const themeToggle = document.getElementById('theme-toggle');
+        const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && prefersDarkTheme.matches)) {
+            document.body.classList.add('dark-mode');
+            if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            document.body.classList.remove('dark-mode');
+            if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                console.log(`Toggled theme: ${isDark ? 'dark' : 'light'}`); // Debug
+            });
+        }
+    } catch (e) {
+        console.error('Error in initializeThemeToggle:', e);
+    }
+}
+
 // Gestione turni
 function createShift() {
     try {
-        const shiftName = document.getElementById('shiftName')?.value?.trim().toUpperCase() || '';
-        const shiftAbbreviation = document.getElementById('shiftAbbreviation')?.value?.trim().toUpperCase() || shiftName;
-        const shiftHoursInput = document.getElementById('shiftHours')?.value?.trim() || '';
-        const shiftColor = document.getElementById('shiftColor')?.value || '#fef3c7';
+        const shiftName = document.getElementById('shift-name-input')?.value?.trim().toUpperCase() || '';
+        const shiftAbbr = document.getElementById('shift-abbr-input')?.value?.trim().toUpperCase() || shiftName;
+        const shiftHoursInput = document.getElementById('shift-hours-input')?.value?.trim() || '';
+        const shiftColor = document.getElementById('shift-color-input')?.value || '#fef3c7';
         if (!shiftName || !shiftHoursInput) {
             alert('alertInvalidNameHours');
             return;
         }
         const shiftHours = timeToDecimal(shiftHoursInput);
-        if (isNaN(shiftHours)) {
+        console.log(`Creating shift: ${shiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
+        if (isNaN(shiftHours) || shiftHours === 0) {
             alert('alertInvalidHours');
             return;
         }
@@ -613,10 +641,11 @@ function createShift() {
         }
         shifts[shiftName] = {
             name: shiftName,
-            abbreviation: shiftAbbreviation,
+            abbreviation: shiftAbbr,
             hours: shiftHours,
             color: shiftColor
         };
+        console.log(`Shift created:`, shifts[shiftName]); // Debug
         saveCustomShifts();
         closeCreateShiftModal();
         renderShiftSelector();
@@ -628,9 +657,10 @@ function createShift() {
 
 function openCreateShiftModal() {
     try {
-        const modal = document.getElementById('createShiftModal');
+        const modal = document.getElementById('create-shift-modal');
         if (modal) {
             modal.classList.remove('hidden');
+            console.log('Opened create shift modal'); // Debug
         }
     } catch (e) {
         console.error('Error in openCreateShiftModal:', e);
@@ -639,15 +669,16 @@ function openCreateShiftModal() {
 
 function closeCreateShiftModal() {
     try {
-        const modal = document.getElementById('createShiftModal');
+        const modal = document.getElementById('create-shift-modal');
         if (modal) {
             modal.classList.add('hidden');
-            ['shiftName', 'shiftAbbreviation', 'shiftHours', 'shiftColor'].forEach(id => {
+            ['shift-name-input', 'shift-abbr-input', 'shift-hours-input', 'shift-color-input'].forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    element.value = id === 'shiftColor' ? '#fef3c7' : '';
+                    element.value = id === 'shift-color-input' ? '#fef3c7' : '';
                 }
             });
+            console.log('Closed create shift modal'); // Debug
         }
     } catch (e) {
         console.error('Error in closeCreateShiftModal:', e);
@@ -657,7 +688,7 @@ function closeCreateShiftModal() {
 function openEditShiftModal() {
     try {
         const select = document.createElement('select');
-        select.id = 'editShiftSelect';
+        select.id = 'edit-shift-select';
         select.className = 'w-full p-2 border rounded-lg mb-4';
         select.innerHTML = `<option value="" data-translate="selectShiftOption">${translations[localStorage.getItem('selectedLanguage') || 'it'].selectShiftOption}</option>` +
             Object.keys(shifts).map(
@@ -668,26 +699,27 @@ function openEditShiftModal() {
             if (shiftKey && shifts[shiftKey]) {
                 currentEditShiftKey = shiftKey;
                 const inputs = {
-                    editShiftName: shifts[shiftKey].name,
-                    editShiftAbbreviation: shifts[shiftKey].abbreviation,
-                    editShiftHours: decimalToTime(shifts[shiftKey].hours),
-                    editShiftColor: shifts[shiftKey].color
+                    'edit-shift-name': shifts[shiftKey].name,
+                    'edit-shift-abbr': shifts[shiftKey].abbreviation,
+                    'edit-shift-hours': decimalToTime(shifts[shiftKey].hours),
+                    'edit-shift-color': shifts[shiftKey].color
                 };
                 Object.entries(inputs).forEach(([id, value]) => {
                     const element = document.getElementById(id);
                     if (element) element.value = value;
                 });
+                console.log(`Selected shift to edit: ${shiftKey}`); // Debug
             } else {
                 currentEditShiftKey = null;
-                ['editShiftName', 'editShiftAbbreviation', 'editShiftHours', 'editShiftColor'].forEach(id => {
+                ['edit-shift-name', 'edit-shift-abbr', 'edit-shift-hours', 'edit-shift-color'].forEach(id => {
                     const element = document.getElementById(id);
                     if (element) {
-                        element.value = id === 'editShiftColor' ? '#fef3c7' : '';
+                        element.value = id === 'edit-shift-color' ? '#fef3c7' : '';
                     }
                 });
             }
         });
-        const modal = document.getElementById('editShiftModal');
+        const modal = document.getElementById('edit-shift-modal');
         if (modal) {
             const modalContent = modal.querySelector('.bg-white.p-6.rounded-lg.shadow-lg.max-w-sm.w-full');
             const title = modalContent?.querySelector('h3');
@@ -696,6 +728,7 @@ function openEditShiftModal() {
             }
             modal.classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
+            console.log('Opened edit shift modal'); // Debug
         }
     } catch (e) {
         console.error('Error in openEditShiftModal:', e);
@@ -704,11 +737,12 @@ function openEditShiftModal() {
 
 function closeEditShiftModal() {
     try {
-        const modal = document.getElementById('editShiftModal');
-        const select = document.getElementById('editShiftSelect');
+        const modal = document.getElementById('edit-shift-modal');
+        const select = document.getElementById('edit-shift-select');
         if (select) select.remove();
         if (modal) modal.classList.add('hidden');
         currentEditShiftKey = null;
+        console.log('Closed edit shift modal'); // Debug
     } catch (e) {
         console.error('Error in closeEditShiftModal:', e);
     }
@@ -721,16 +755,17 @@ function updateShift() {
             return;
         }
         const oldShiftName = currentEditShiftKey;
-        const newShiftName = document.getElementById('editShiftName')?.value?.trim().toUpperCase() || '';
-        const shiftAbbreviation = document.getElementById('editShiftAbbreviation')?.value?.trim().toUpperCase() || newShiftName;
-        const shiftHoursInput = document.getElementById('editShiftHours')?.value?.trim() || '';
-        const shiftColor = document.getElementById('editShiftColor')?.value || '#fef3c7';
+        const newShiftName = document.getElementById('edit-shift-name')?.value?.trim().toUpperCase() || '';
+        const shiftAbbr = document.getElementById('edit-shift-abbr')?.value?.trim().toUpperCase() || newShiftName;
+        const shiftHoursInput = document.getElementById('edit-shift-hours')?.value?.trim() || '';
+        const shiftColor = document.getElementById('edit-shift-color')?.value || '#fef3c7';
         if (!newShiftName || !shiftHoursInput) {
             alert('alertInvalidNameHours');
             return;
         }
         const shiftHours = timeToDecimal(shiftHoursInput);
-        if (isNaN(shiftHours)) {
+        console.log(`Updating shift: ${oldShiftName} -> ${newShiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
+        if (isNaN(shiftHours) || shiftHours === 0) {
             alert('alertInvalidHours');
             return;
         }
@@ -738,10 +773,9 @@ function updateShift() {
             alert('alertShiftExists');
             return;
         }
-
         const updatedShift = {
             name: newShiftName,
-            abbreviation: shiftAbbreviation,
+            abbreviation: shiftAbbr,
             hours: shiftHours,
             color: shiftColor
         };
@@ -761,12 +795,11 @@ function updateShift() {
         } else {
             shifts[oldShiftName] = updatedShift;
         }
-
         saveCustomShifts();
         closeEditShiftModal();
         renderShiftSelector();
         renderCalendar();
-        if (document.getElementById('annualPage')?.style.display === 'block') {
+        if (document.getElementById('annual-view').style.display === 'block') {
             renderAnnualCalendar();
             updateAnnualStats();
         }
@@ -775,6 +808,7 @@ function updateShift() {
             selectedShift = newShiftName;
             renderShiftSelector();
         }
+        console.log(`Shift updated:`, shifts[newShiftName]); // Debug
     } catch (e) {
         console.error('Error in updateShift:', e);
     }
@@ -782,16 +816,17 @@ function updateShift() {
 
 function openDeleteShiftModal() {
     try {
-        const select = document.getElementById('deleteShiftSelect');
+        const select = document.getElementById('delete-shift-select');
         if (select) {
             select.innerHTML = `<option value="" data-translate="selectShiftOption">${translations[localStorage.getItem('selectedLanguage') || 'it'].selectShiftOption}</option>` +
                 Object.keys(shifts).map(
                     key => `<option value="${key}">${shifts[key].name} (${decimalToTime(shifts[key].hours)})</option>`
                 ).join('');
-            const modal = document.getElementById('deleteShiftModal');
+            const modal = document.getElementById('delete-shift-modal');
             if (modal) {
                 modal.classList.remove('hidden');
                 updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
+                console.log('Opened delete shift modal'); // Debug
             }
         }
     } catch (e) {
@@ -801,10 +836,11 @@ function openDeleteShiftModal() {
 
 function closeDeleteShiftModal() {
     try {
-        const modal = document.getElementById('deleteShiftModal');
-        const select = document.getElementById('deleteShiftSelect');
+        const modal = document.getElementById('delete-shift-modal');
+        const select = document.getElementById('delete-shift-select');
         if (modal) modal.classList.add('hidden');
         if (select) select.value = '';
+        console.log('Closed delete shift modal'); // Debug
     } catch (e) {
         console.error('Error in closeDeleteShiftModal:', e);
     }
@@ -812,7 +848,7 @@ function closeDeleteShiftModal() {
 
 function deleteShift() {
     try {
-        const shiftName = document.getElementById('deleteShiftSelect')?.value;
+        const shiftName = document.getElementById('delete-shift-select')?.value;
         if (!shiftName) {
             alert('alertSelectShiftToDelete');
             return;
@@ -833,6 +869,7 @@ function deleteShift() {
         renderShiftSelector();
         renderCalendar();
         updateWorkedHoursAndSummary();
+        console.log(`Shift deleted: ${shiftName}`); // Debug
     } catch (e) {
         console.error('Error in deleteShift:', e);
     }
@@ -842,7 +879,7 @@ function deleteShift() {
 function saveNote() {
     try {
         if (currentNoteKey && isStorageAvailable) {
-            const noteText = document.getElementById('noteText')?.value?.trim() || '';
+            const noteText = document.getElementById('note-text')?.value?.trim() || '';
             if (noteText) {
                 const noteData = { text: noteText };
                 localStorage.setItem(currentNoteKey, JSON.stringify(noteData));
@@ -851,6 +888,7 @@ function saveNote() {
             }
             closeNoteModal();
             renderCalendar();
+            console.log(`Saved note: ${currentNoteKey}`); // Debug
         }
     } catch (e) {
         console.error('Error in saveNote:', e);
@@ -875,12 +913,13 @@ function openNoteModal(year, month, day) {
     try {
         currentNoteKey = `note_${year}_${month}_${day}`;
         const noteData = loadNote(currentNoteKey);
-        const noteText = document.getElementById('noteText');
+        const noteText = document.getElementById('note-text');
         if (noteText) noteText.value = noteData.text;
-        const modal = document.getElementById('noteModal');
+        const modal = document.getElementById('note-modal');
         if (modal) {
             modal.classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
+            console.log(`Opened note modal for ${currentNoteKey}`); // Debug
         }
     } catch (e) {
         console.error('Error in openNoteModal:', e);
@@ -889,11 +928,12 @@ function openNoteModal(year, month, day) {
 
 function closeNoteModal() {
     try {
-        const modal = document.getElementById('noteModal');
-        const noteText = document.getElementById('noteText');
+        const modal = document.getElementById('note-modal');
+        const noteText = document.getElementById('note-text');
         if (modal) modal.classList.add('hidden');
         if (noteText) noteText.value = '';
         currentNoteKey = null;
+        console.log('Closed note modal'); // Debug
     } catch (e) {
         console.error('Error in closeNoteModal:', e);
     }
@@ -902,7 +942,7 @@ function closeNoteModal() {
 // Rendering e navigazione
 function renderShiftSelector() {
     try {
-        const shiftSelector = document.getElementById('shiftSelector');
+        const shiftSelector = document.getElementById('shift-selector');
         if (shiftSelector) {
             shiftSelector.innerHTML = '';
             Object.keys(shifts).forEach(shiftKey => {
@@ -916,9 +956,11 @@ function renderShiftSelector() {
                 shiftOption.addEventListener('click', () => {
                     selectedShift = shiftKey;
                     renderShiftSelector();
+                    console.log(`Selected shift: ${shiftKey}`); // Debug
                 });
                 shiftSelector.appendChild(shiftOption);
             });
+            console.log('Rendered shift selector'); // Debug
         }
     } catch (e) {
         console.error('Error in renderShiftSelector:', e);
@@ -929,6 +971,7 @@ function clearShift() {
     try {
         selectedShift = null;
         renderShiftSelector();
+        console.log('Cleared selected shift'); // Debug
     } catch (e) {
         console.error('Error in clearShift:', e);
     }
@@ -936,10 +979,10 @@ function clearShift() {
 
 function renderCalendar() {
     try {
-        const calendar = document.getElementById('calendar');
-        const monthYear = document.getElementById('monthYear');
+        const calendar = document.getElementById('calendar-view');
+        const monthName = document.getElementById('month-name');
         const lang = localStorage.getItem('selectedLanguage') || 'it';
-        
+
         if (!calendar) {
             console.error('Calendar element not found');
             return;
@@ -949,8 +992,8 @@ function renderCalendar() {
             calendar.removeChild(calendar.lastChild);
         }
 
-        if (monthYear) {
-            monthYear.textContent = `${translations[lang].monthNames[currentMonth]} ${currentYear}`;
+        if (monthName) {
+            monthName.textContent = `${translations[lang].monthNames[currentMonth]} ${currentYear}`;
         }
 
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -977,6 +1020,14 @@ function renderCalendar() {
             dayNumber.className = 'day-number';
             dayNumber.textContent = day;
             cell.appendChild(dayNumber);
+
+            // Aggiungi il pulsante per le note in ogni cella
+            const noteButton = document.createElement('button');
+            noteButton.className = 'note-edit-btn';
+            noteButton.innerHTML = '<i class="fas fa-edit"></i>';
+            noteButton.title = translations[lang].editNote;
+            noteButton.addEventListener('click', () => openNoteModal(currentYear, currentMonth, day));
+            cell.appendChild(noteButton);
 
             const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
             const shiftNames = loadShift(shiftKey);
@@ -1007,7 +1058,7 @@ function renderCalendar() {
             }
 
             cell.addEventListener('click', (e) => {
-                if (e.target.classList.contains('note-edit-btn')) return;
+                if (e.target.classList.contains('note-edit-btn') || e.target.parentElement.classList.contains('note-edit-btn')) return;
                 if (selectedShift) {
                     const currentShifts = loadShift(shiftKey);
                     const shiftIndex = currentShifts.indexOf(selectedShift);
@@ -1017,6 +1068,7 @@ function renderCalendar() {
                             saveShift(shiftKey, currentShifts);
                             renderCalendar();
                             updateWorkedHoursAndSummary();
+                            console.log(`Added shift ${selectedShift} to ${shiftKey}`); // Debug
                         } else {
                             alert('alertMaxShifts');
                         }
@@ -1025,6 +1077,7 @@ function renderCalendar() {
                         saveShift(shiftKey, currentShifts);
                         renderCalendar();
                         updateWorkedHoursAndSummary();
+                        console.log(`Removed shift ${selectedShift} from ${shiftKey}`); // Debug
                     }
                 }
             });
@@ -1033,85 +1086,309 @@ function renderCalendar() {
             const noteData = loadNote(noteKey);
             if (noteData.text) {
                 cell.classList.add('has-note');
-                const noteDiv = document.createElement('div');
-                noteDiv.className = 'note-text';
-                noteDiv.textContent = noteData.text;
-                if (shiftNames.length < 5) {
-                    noteDiv.style.display = 'block';
-                }
-                cell.appendChild(noteDiv);
+                const noteText = document.createElement('div');
+                noteText.className = 'note-text';
+                noteText.textContent = noteData.text;
+                cell.appendChild(noteText);
             }
-
-            const noteEditBtn = document.createElement('div');
-            noteEditBtn.className = 'note-edit-btn';
-            noteEditBtn.innerHTML = '<i class="fas fa-edit"></i>';
-            noteEditBtn.title = translations[lang].editNote;
-            noteEditBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openNoteModal(currentYear, currentMonth, day);
-            });
-            cell.appendChild(noteEditBtn);
 
             calendar.appendChild(cell);
         }
-
-        const totalCellsNeeded = offset + daysInMonth;
-        const rowsNeeded = Math.ceil(totalCellsNeeded / 7);
-        const totalCells = rowsNeeded * 7;
-        while (calendar.children.length < totalCells) {
-            const emptyCell = document.createElement('div');
-            emptyCell.className = 'day-cell';
-            calendar.appendChild(emptyCell);
-        }
+        console.log(`Rendered calendar for ${translations[lang].monthNames[currentMonth]} ${currentYear}`); // Debug
     } catch (e) {
         console.error('Error in renderCalendar:', e);
     }
 }
 
+function prevMonth() {
+    try {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+        updateWorkedHoursAndSummary();
+        console.log(`Navigated to previous month: ${currentMonth + 1}/${currentYear}`); // Debug
+    } catch (e) {
+        console.error('Error in prevMonth:', e);
+    }
+}
+
+function nextMonth() {
+    try {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar();
+        updateWorkedHoursAndSummary();
+        console.log(`Navigated to next month: ${currentMonth + 1}/${currentYear}`); // Debug
+    } catch (e) {
+        console.error('Error in nextMonth:', e);
+    }
+}
+
+// Gestione delle visualizzazioni
+function showMonthlyView() {
+    try {
+        const monthlyView = document.getElementById('monthly-view');
+        const statsView = document.getElementById('stats-view');
+        const annualView = document.getElementById('annual-view');
+        if (monthlyView && statsView && annualView) {
+            monthlyView.style.display = 'block';
+            statsView.style.display = 'none';
+            annualView.style.display = 'none';
+            renderCalendar();
+            updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
+            console.log('Showed monthly view'); // Debug
+        } else {
+            console.error('One or more view elements not found');
+        }
+    } catch (e) {
+        console.error('Error in showMonthlyView:', e);
+    }
+}
+
+function showStatsPage() {
+    try {
+        const monthlyView = document.getElementById('monthly-view');
+        const statsView = document.getElementById('stats-view');
+        const annualView = document.getElementById('annual-view');
+        if (monthlyView && statsView && annualView) {
+            monthlyView.style.display = 'none';
+            statsView.style.display = 'block';
+            annualView.style.display = 'none';
+            updateWorkedHoursAndSummary();
+            updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
+            console.log('Showed stats page'); // Debug
+        } else {
+            console.error('One or more view elements not found');
+        }
+    } catch (e) {
+        console.error('Error in showStatsPage:', e);
+    }
+}
+
+function showAnnualView() {
+    try {
+        const monthlyView = document.getElementById('monthly-view');
+        const statsView = document.getElementById('stats-view');
+        const annualView = document.getElementById('annual-view');
+        if (monthlyView && statsView && annualView) {
+            monthlyView.style.display = 'none';
+            statsView.style.display = 'none';
+            annualView.style.display = 'block';
+            renderAnnualCalendar();
+            updateAnnualStats();
+            updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
+            console.log('Showed annual view'); // Debug
+        } else {
+            console.error('One or more view elements not found');
+        }
+    } catch (e) {
+        console.error('Error in showAnnualView:', e);
+    }
+}
+
+// Statistiche
+function updateWorkedHoursAndSummary() {
+    try {
+        const workedHoursElement = document.getElementById('worked-hours');
+        const shiftsDetailsElement = document.getElementById('shifts-details');
+        const notesListElement = document.getElementById('notes-list');
+        if (!workedHoursElement || !shiftsDetailsElement || !notesListElement) {
+            console.error('Stats elements not found');
+            return;
+        }
+
+        let totalHours = 0;
+        const shiftCounts = {};
+        const notes = [];
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
+            const shiftNames = loadShift(shiftKey);
+            shiftNames.forEach(shiftName => {
+                if (shifts[shiftName]) {
+                    totalHours += shifts[shiftName].hours;
+                    shiftCounts[shiftName] = (shiftCounts[shiftName] || 0) + 1;
+                    console.log(`Day ${day}: Shift ${shiftName}, Hours: ${shifts[shiftName].hours.toFixed(4)}`); // Debug
+                }
+            });
+
+            const noteKey = `note_${currentYear}_${currentMonth}_${day}`;
+            const noteData = loadNote(noteKey);
+            if (noteData.text) {
+                notes.push({ day, text: noteData.text });
+            }
+        }
+
+        const formattedHours = decimalToTime(totalHours);
+        console.log(`Total hours: ${totalHours.toFixed(4)} -> ${formattedHours}`); // Debug
+        workedHoursElement.textContent = formattedHours;
+
+        shiftsDetailsElement.innerHTML = '';
+        if (Object.keys(shiftCounts).length === 0) {
+            const noShifts = document.createElement('div');
+            noShifts.className = 'stats-item';
+            noShifts.textContent = translations[localStorage.getItem('selectedLanguage') || 'it'].noShiftsAssigned;
+            shiftsDetailsElement.appendChild(noShifts);
+        } else {
+            Object.entries(shiftCounts).forEach(([shiftName, count]) => {
+                if (shifts[shiftName]) {
+                    const shiftItem = document.createElement('div');
+                    shiftItem.className = 'stats-item';
+                    const title = document.createElement('div');
+                    title.className = 'stats-item-title';
+                    title.textContent = shifts[shiftName].name;
+                    const value = document.createElement('div');
+                    value.className = 'stats-item-value';
+                    const totalShiftHours = count * shifts[shiftName].hours;
+                    value.textContent = `${count} (${decimalToTime(totalShiftHours)})`;
+                    shiftItem.appendChild(title);
+                    shiftItem.appendChild(value);
+                    shiftsDetailsElement.appendChild(shiftItem);
+                }
+            });
+        }
+
+        notesListElement.innerHTML = '';
+        if (notes.length === 0) {
+            const noNotes = document.createElement('div');
+            noNotes.className = 'stats-item';
+            noNotes.textContent = translations[localStorage.getItem('selectedLanguage') || 'it'].noNotesPresent;
+            notesListElement.appendChild(noNotes);
+        } else {
+            notes.forEach(note => {
+                const noteItem = document.createElement('div');
+                noteItem.className = 'stats-item';
+                noteItem.textContent = `${note.day}: ${note.text}`;
+                notesListElement.appendChild(noteItem);
+            });
+        }
+        console.log('Updated worked hours and summary'); // Debug
+    } catch (e) {
+        console.error('Error in updateWorkedHoursAndSummary:', e);
+    }
+}
+
+function updateAnnualStats() {
+    try {
+        const annualHoursElement = document.getElementById('annual-hours');
+        const annualShiftsDetailsElement = document.getElementById('annual-shifts-details');
+        if (!annualHoursElement || !annualShiftsDetailsElement) {
+            console.error('Annual stats elements not found');
+            return;
+        }
+
+        let totalHours = 0;
+        const shiftCounts = {};
+
+        for (let month = 0; month < 12; month++) {
+            const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const shiftKey = `shift_${currentYear}_${month}_${day}`;
+                const shiftNames = loadShift(shiftKey);
+                shiftNames.forEach(shiftName => {
+                    if (shifts[shiftName]) {
+                        totalHours += shifts[shiftName].hours;
+                        shiftCounts[shiftName] = (shiftCounts[shiftName] || 0) + 1;
+                    }
+                });
+            }
+        }
+
+        const formattedHours = decimalToTime(totalHours);
+        console.log(`Annual total hours: ${totalHours.toFixed(4)} -> ${formattedHours}`); // Debug
+        annualHoursElement.textContent = formattedHours;
+
+        annualShiftsDetailsElement.innerHTML = '';
+        if (Object.keys(shiftCounts).length === 0) {
+            const noShifts = document.createElement('div');
+            noShifts.className = 'stats-item';
+            noShifts.textContent = translations[localStorage.getItem('selectedLanguage') || 'it'].noShiftsAssigned;
+            annualShiftsDetailsElement.appendChild(noShifts);
+        } else {
+            Object.entries(shiftCounts).forEach(([shiftName, count]) => {
+                if (shifts[shiftName]) {
+                    const shiftItem = document.createElement('div');
+                    shiftItem.className = 'stats-item';
+                    const title = document.createElement('div');
+                    title.className = 'stats-item-title';
+                    title.textContent = shifts[shiftName].name;
+                    const value = document.createElement('div');
+                    value.className = 'stats-item-value';
+                    const totalShiftHours = count * shifts[shiftName].hours;
+                    value.textContent = `${count} (${decimalToTime(totalShiftHours)})`;
+                    shiftItem.appendChild(title);
+                    shiftItem.appendChild(value);
+                    annualShiftsDetailsElement.appendChild(shiftItem);
+                }
+            });
+        }
+        console.log('Updated annual stats'); // Debug
+    } catch (e) {
+        console.error('Error in updateAnnualStats:', e);
+    }
+}
+
 function renderAnnualCalendar() {
     try {
-        const annualContainer = document.getElementById('annualCalendar');
-        if (!annualContainer) return;
+        const annualContainer = document.getElementById('annual-calendar');
+        if (!annualContainer) {
+            console.error('Annual calendar element not found');
+            return;
+        }
 
         annualContainer.innerHTML = '';
-        const today = new Date();
-        const currentYear = today.getFullYear();
         const lang = localStorage.getItem('selectedLanguage') || 'it';
+        const today = new Date();
 
         for (let month = 0; month < 12; month++) {
             const monthDiv = document.createElement('div');
             monthDiv.className = 'annual-month';
+
             const titleDiv = document.createElement('div');
             titleDiv.className = 'annual-month-title';
             titleDiv.textContent = translations[lang].monthNames[month];
             monthDiv.appendChild(titleDiv);
+
             const gridDiv = document.createElement('div');
             gridDiv.className = 'annual-month-grid';
+
             translations[lang].dayNames.forEach(day => {
                 const dayHeader = document.createElement('div');
                 dayHeader.className = 'annual-day-cell';
-                dayHeader.textContent = day;
+                dayHeader.textContent = day.slice(0, 1);
                 gridDiv.appendChild(dayHeader);
             });
+
             const firstDay = new Date(currentYear, month, 1).getDay();
             const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
             const offset = firstDay === 0 ? 6 : firstDay - 1;
+
             for (let i = 0; i < offset; i++) {
                 const emptyCell = document.createElement('div');
                 emptyCell.className = 'annual-day-cell';
                 gridDiv.appendChild(emptyCell);
             }
+
             for (let day = 1; day <= daysInMonth; day++) {
                 const cell = document.createElement('div');
                 cell.className = 'annual-day-cell';
                 if (today.getFullYear() === currentYear && today.getMonth() === month && today.getDate() === day) {
                     cell.classList.add('today');
                 }
+
                 const date = new Date(currentYear, month, day);
                 const isHoliday = holidays.some(h => h.month === month && h.day === day) || date.getDay() === 0;
                 if (isHoliday) {
                     cell.classList.add('holiday');
                 }
+
                 const shiftKey = `shift_${currentYear}_${month}_${day}`;
                 const shiftNames = loadShift(shiftKey);
                 if (shiftNames.length > 0) {
@@ -1126,276 +1403,16 @@ function renderAnnualCalendar() {
                 } else {
                     cell.textContent = day;
                 }
+
                 gridDiv.appendChild(cell);
             }
+
             monthDiv.appendChild(gridDiv);
             annualContainer.appendChild(monthDiv);
         }
+        console.log(`Rendered annual calendar for ${currentYear}`); // Debug
     } catch (e) {
         console.error('Error in renderAnnualCalendar:', e);
-    }
-}
-
-// Statistiche
-function calculateWorkedHours() {
-    try {
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        let totalWorked = 0;
-        for (let day = 1; day <= daysInMonth; day++) {
-            const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
-            const shiftNames = loadShift(shiftKey);
-            shiftNames.forEach(shiftName => {
-                if (shifts[shiftName]) {
-                    totalWorked += shifts[shiftName].hours;
-                }
-            });
-        }
-        return totalWorked;
-    } catch (e) {
-        console.error('Error in calculateWorkedHours:', e);
-        return 0;
-    }
-}
-
-function calculateShiftSummary() {
-    try {
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        const shiftCounts = {};
-        const shiftHours = {};
-        Object.keys(shifts).forEach(shift => {
-            shiftCounts[shift] = 0;
-            shiftHours[shift] = 0;
-        });
-        for (let day = 1; day <= daysInMonth; day++) {
-            const shiftKey = `shift_${currentYear}_${currentMonth}_${day}`;
-            const shiftNames = loadShift(shiftKey);
-            shiftNames.forEach(shiftName => {
-                if (shifts[shiftName]) {
-                    shiftCounts[shiftName]++;
-                    shiftHours[shiftName] += shifts[shiftName].hours;
-                }
-            });
-        }
-        const lang = localStorage.getItem('selectedLanguage') || 'it';
-        let summaryHtml = '';
-        Object.keys(shifts).forEach(shift => {
-            const totalHours = shiftHours[shift];
-            const formattedHours = decimalToTime(totalHours);
-            summaryHtml += `
-                <div class="stats-item">
-                    <div class="stats-item-title">${shifts[shift].name}</div>
-                    <div class="stats-item-value">${shiftCounts[shift]}</div>
-                    <div class="stats-item-title">${formattedHours}</div>
-                </div>
-            `;
-        });
-        if (!Object.keys(shifts).length) {
-            summaryHtml = `<div class="stats-item">${translations[lang].noShiftsAssigned}</div>`;
-        }
-        return summaryHtml;
-    } catch (e) {
-        console.error('Error in calculateShiftSummary:', e);
-        return '';
-    }
-}
-
-function updateWorkedHoursAndSummary() {
-    try {
-        const statsWorkedHours = document.getElementById('statsWorkedHours');
-        const statsShiftsDetails = document.getElementById('statsShiftsDetails');
-        if (statsWorkedHours && statsShiftsDetails) {
-            const workedHours = calculateWorkedHours();
-            statsWorkedHours.textContent = decimalToTime(workedHours);
-            statsShiftsDetails.innerHTML = calculateShiftSummary();
-            updateStatsNotes();
-        }
-    } catch (e) {
-        console.error('Error in updateWorkedHoursAndSummary:', e);
-    }
-}
-
-function updateStatsNotes() {
-    try {
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        const lang = localStorage.getItem('selectedLanguage') || 'it';
-        let notesHtml = '';
-        const statsNotesList = document.getElementById('statsNotesList');
-        if (!statsNotesList) return;
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const noteKey = `note_${currentYear}_${currentMonth}_${day}`;
-            const noteData = loadNote(noteKey);
-            if (noteData.text) {
-                const date = new Date(currentYear, currentMonth, day);
-                const dayName = translations[lang].dayNames[date.getDay()];
-                notesHtml += `
-                    <div class="mb-3 pb-3 border-b border-blue-300">
-                        <div class="font-bold text-white">${day} ${dayName}</div>
-                        <div class="text-sm text-white">${noteData.text}</div>
-                    </div>
-                `;
-            }
-        }
-        if (!notesHtml) {
-            notesHtml = `<div class="text-white text-center">${translations[lang].noNotesPresent}</div>`;
-        }
-        statsNotesList.innerHTML = notesHtml;
-    } catch (e) {
-        console.error('Error in updateStatsNotes:', e);
-    }
-}
-
-function updateAnnualStats() {
-    try {
-        const annualWorkedHours = document.getElementById('annualWorkedHours');
-        const annualShiftsDetails = document.getElementById('annualShiftsDetails');
-        if (!annualWorkedHours || !annualShiftsDetails) return;
-
-        const currentYear = new Date().getFullYear();
-        let totalWorked = 0;
-        const shiftCounts = {};
-        const shiftHours = {};
-        Object.keys(shifts).forEach(shift => {
-            shiftCounts[shift] = 0;
-            shiftHours[shift] = 0;
-        });
-        for (let month = 0; month < 12; month++) {
-            const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const shiftKey = `shift_${currentYear}_${month}_${day}`;
-                const shiftNames = loadShift(shiftKey);
-                shiftNames.forEach(shiftName => {
-                    if (shifts[shiftName]) {
-                        shiftCounts[shiftName]++;
-                        shiftHours[shiftName] += shifts[shiftName].hours;
-                        totalWorked += shifts[shiftName].hours;
-                    }
-                });
-            }
-        }
-        annualWorkedHours.textContent = decimalToTime(totalWorked);
-        const lang = localStorage.getItem('selectedLanguage') || 'it';
-        let summaryHtml = '';
-        Object.keys(shifts).forEach(shift => {
-            const totalHours = shiftHours[shift];
-            const formattedHours = decimalToTime(totalHours);
-            summaryHtml += `
-                <div class="stats-item">
-                    <div class="stats-item-title">${shifts[shift].name}</div>
-                    <div class="stats-item-value">${shiftCounts[shift]}</div>
-                    <div class="stats-item-title">${formattedHours}</div>
-                </div>
-            `;
-        });
-        if (!Object.keys(shifts).length) {
-            summaryHtml = `<div class="stats-item">${translations[lang].noShiftsAssigned}</div>`;
-        }
-        annualShiftsDetails.innerHTML = summaryHtml;
-    } catch (e) {
-        console.error('Error in updateAnnualStats:', e);
-    }
-}
-
-// Navigazione tra pagine
-function showStatsPage() {
-    try {
-        const mainPage = document.getElementById('mainPage');
-        const statsPage = document.getElementById('statsPage');
-        const annualPage = document.getElementById('annualPage');
-        if (mainPage && statsPage && annualPage) {
-            mainPage.style.display = 'none';
-            statsPage.style.display = 'block';
-            annualPage.style.display = 'none';
-            updateWorkedHoursAndSummary();
-        }
-    } catch (e) {
-        console.error('Error in showStatsPage:', e);
-    }
-}
-
-function showMainPage() {
-    try {
-        const mainPage = document.getElementById('mainPage');
-        const statsPage = document.getElementById('statsPage');
-        const annualPage = document.getElementById('annualPage');
-        if (mainPage && statsPage && annualPage) {
-            mainPage.style.display = 'block';
-            statsPage.style.display = 'none';
-            annualPage.style.display = 'none';
-            renderCalendar();
-        }
-    } catch (e) {
-        console.error('Error in showMainPage:', e);
-    }
-}
-
-function showAnnualPage() {
-    try {
-        const mainPage = document.getElementById('mainPage');
-        const statsPage = document.getElementById('statsPage');
-        const annualPage = document.getElementById('annualPage');
-        if (mainPage && statsPage && annualPage) {
-            mainPage.style.display = 'none';
-            statsPage.style.display = 'none';
-            annualPage.style.display = 'block';
-            renderAnnualCalendar();
-            updateAnnualStats();
-        }
-    } catch (e) {
-        console.error('Error in showAnnualPage:', e);
-    }
-}
-
-function prevMonth() {
-    try {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar();
-        if (document.getElementById('statsPage')?.style.display === 'block') {
-            updateWorkedHoursAndSummary();
-        }
-    } catch (e) {
-        console.error('Error in prevMonth:', e);
-    }
-}
-
-function nextMonth() {
-    try {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        renderCalendar();
-        if (document.getElementById('statsPage')?.style.display === 'block') {
-            updateWorkedHoursAndSummary();
-        }
-    } catch (e) {
-        console.error('Error in nextMonth:', e);
-    }
-}
-
-// Funzioni di supporto
-function getMonthName(month) {
-    try {
-        const lang = localStorage.getItem('selectedLanguage') || 'it';
-        return translations[lang].monthNames[month] || '';
-    } catch (e) {
-        console.error('Error in getMonthName:', e);
-        return '';
-    }
-}
-
-function getDayNames() {
-    try {
-        const lang = localStorage.getItem('selectedLanguage') || 'it';
-        return translations[lang].dayNames || [];
-    } catch (e) {
-        console.error('Error in getDayNames:', e);
-        return [];
     }
 }
 
@@ -1405,10 +1422,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('DOM content loaded, initializing app');
         initializeLanguageSelector();
         initializeHamburgerMenu();
+        initializeThemeToggle();
         loadCustomShifts();
         renderShiftSelector();
         renderCalendar();
-        showMainPage();
+        showMonthlyView();
     } catch (e) {
         console.error('Error in DOMContentLoaded:', e);
     }
