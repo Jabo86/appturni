@@ -1,3 +1,5 @@
+// script.js
+
 // Variabili globali
 let shifts = {};
 const holidays = [
@@ -385,7 +387,7 @@ function saveShift(shiftKey, shiftValue) {
             } else {
                 localStorage.removeItem(shiftKey);
             }
-            console.log(`Saved shift: ${shiftKey}`, shiftValue);
+            console.log(`Saved shift: ${shiftKey}`, shiftValue); // Debug
         }
     } catch (e) {
         console.error('Error in saveShift:', e);
@@ -410,7 +412,7 @@ function saveCustomShifts() {
     try {
         if (isStorageAvailable) {
             localStorage.setItem('customShifts', JSON.stringify(shifts));
-            console.log('Saved custom shifts:', shifts);
+            console.log('Saved custom shifts:', shifts); // Debug
         }
     } catch (e) {
         console.error('Error in saveCustomShifts:', e);
@@ -424,7 +426,7 @@ function loadCustomShifts() {
             const customShifts = localStorage.getItem('customShifts');
             if (customShifts) {
                 shifts = JSON.parse(customShifts);
-                console.log('Loaded custom shifts:', shifts);
+                console.log('Loaded custom shifts:', shifts); // Debug
             }
         }
     } catch (e) {
@@ -444,7 +446,7 @@ function timeToDecimal(time) {
             return 0;
         }
         const decimal = hours + (minutes / 60);
-        console.log(`timeToDecimal: ${time} -> ${decimal.toFixed(4)}`);
+        console.log(`timeToDecimal: ${time} -> ${decimal.toFixed(4)}`); // Debug
         return decimal;
     } catch (e) {
         console.error('Error in timeToDecimal:', e);
@@ -461,7 +463,7 @@ function decimalToTime(decimal) {
         const hours = Math.floor(decimal);
         const minutes = Math.round((decimal - hours) * 60);
         const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}`;
-        console.log(`decimalToTime: ${decimal.toFixed(4)} -> ${formattedTime}`);
+        console.log(`decimalToTime: ${decimal.toFixed(4)} -> ${formattedTime}`); // Debug
         return formattedTime;
     } catch (e) {
         console.error('Error in decimalToTime:', e);
@@ -496,7 +498,7 @@ function updateTranslations(lang) {
         if (monthNameElement) {
             monthNameElement.textContent = `${translations[lang].monthNames[currentMonth]} ${currentYear}`;
         }
-        console.log(`Updated translations to ${lang}`);
+        console.log(`Updated translations to ${lang}`); // Debug
     } catch (e) {
         console.error('Error in updateTranslations:', e);
     }
@@ -534,7 +536,7 @@ function initializeLanguageSelector() {
                 e.stopPropagation();
                 languageMenu.classList.toggle('active');
                 languageButton.classList.toggle('active');
-                console.log('Toggled language menu');
+                console.log('Toggled language menu'); // Debug
             });
 
             languageOptions.forEach(option => {
@@ -548,7 +550,7 @@ function initializeLanguageSelector() {
                         languageButton.classList.remove('active');
                         updateTranslations(lang);
                         renderCalendar();
-                        console.log(`Selected language: ${lang}`);
+                        console.log(`Selected language: ${lang}`); // Debug
                     }
                 });
             });
@@ -573,7 +575,7 @@ function initializeHamburgerMenu() {
             hamburgerButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 hamburgerMenu.classList.toggle('active');
-                console.log('Toggled hamburger menu');
+                console.log('Toggled hamburger menu'); // Debug
             });
             document.addEventListener('click', (e) => {
                 if (!hamburgerButton.contains(e.target) && !hamburgerMenu.contains(e.target)) {
@@ -595,8 +597,6 @@ function initializeThemeToggle() {
         const themeToggle = document.getElementById('theme-toggle');
         const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
         const savedTheme = localStorage.getItem('theme');
-
-        // Imposta il tema chiaro come predefinito se non c'è un tema salvato
         if (savedTheme === 'dark' || (!savedTheme && prefersDarkTheme.matches)) {
             document.body.classList.add('dark-mode');
             if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
@@ -604,14 +604,13 @@ function initializeThemeToggle() {
             document.body.classList.remove('dark-mode');
             if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
-
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
                 const isDark = document.body.classList.contains('dark-mode');
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
                 themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-                console.log(`Toggled theme: ${isDark ? 'dark' : 'light'}`);
+                console.log(`Toggled theme: ${isDark ? 'dark' : 'light'}`); // Debug
             });
         }
     } catch (e) {
@@ -631,7 +630,7 @@ function createShift() {
             return;
         }
         const shiftHours = timeToDecimal(shiftHoursInput);
-        console.log(`Creating shift: ${shiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`);
+        console.log(`Creating shift: ${shiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
         if (isNaN(shiftHours) || shiftHours === 0) {
             alert('alertInvalidHours');
             return;
@@ -646,7 +645,7 @@ function createShift() {
             hours: shiftHours,
             color: shiftColor
         };
-        console.log(`Shift created:`, shifts[shiftName]);
+        console.log(`Shift created:`, shifts[shiftName]); // Debug
         saveCustomShifts();
         closeCreateShiftModal();
         renderShiftSelector();
@@ -661,7 +660,7 @@ function openCreateShiftModal() {
         const modal = document.getElementById('create-shift-modal');
         if (modal) {
             modal.classList.remove('hidden');
-            console.log('Opened create shift modal');
+            console.log('Opened create shift modal'); // Debug
         }
     } catch (e) {
         console.error('Error in openCreateShiftModal:', e);
@@ -679,7 +678,7 @@ function closeCreateShiftModal() {
                     element.value = id === 'shift-color-input' ? '#fef3c7' : '';
                 }
             });
-            console.log('Closed create shift modal');
+            console.log('Closed create shift modal'); // Debug
         }
     } catch (e) {
         console.error('Error in closeCreateShiftModal:', e);
@@ -709,7 +708,7 @@ function openEditShiftModal() {
                     const element = document.getElementById(id);
                     if (element) element.value = value;
                 });
-                console.log(`Selected shift to edit: ${shiftKey}`);
+                console.log(`Selected shift to edit: ${shiftKey}`); // Debug
             } else {
                 currentEditShiftKey = null;
                 ['edit-shift-name', 'edit-shift-abbr', 'edit-shift-hours', 'edit-shift-color'].forEach(id => {
@@ -729,7 +728,7 @@ function openEditShiftModal() {
             }
             modal.classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
-            console.log('Opened edit shift modal');
+            console.log('Opened edit shift modal'); // Debug
         }
     } catch (e) {
         console.error('Error in openEditShiftModal:', e);
@@ -743,7 +742,7 @@ function closeEditShiftModal() {
         if (select) select.remove();
         if (modal) modal.classList.add('hidden');
         currentEditShiftKey = null;
-        console.log('Closed edit shift modal');
+        console.log('Closed edit shift modal'); // Debug
     } catch (e) {
         console.error('Error in closeEditShiftModal:', e);
     }
@@ -765,7 +764,7 @@ function updateShift() {
             return;
         }
         const shiftHours = timeToDecimal(shiftHoursInput);
-        console.log(`Updating shift: ${oldShiftName} -> ${newShiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`);
+        console.log(`Updating shift: ${oldShiftName} -> ${newShiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
         if (isNaN(shiftHours) || shiftHours === 0) {
             alert('alertInvalidHours');
             return;
@@ -809,7 +808,7 @@ function updateShift() {
             selectedShift = newShiftName;
             renderShiftSelector();
         }
-        console.log(`Shift updated:`, shifts[newShiftName]);
+        console.log(`Shift updated:`, shifts[newShiftName]); // Debug
     } catch (e) {
         console.error('Error in updateShift:', e);
     }
@@ -827,7 +826,7 @@ function openDeleteShiftModal() {
             if (modal) {
                 modal.classList.remove('hidden');
                 updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
-                console.log('Opened delete shift modal');
+                console.log('Opened delete shift modal'); // Debug
             }
         }
     } catch (e) {
@@ -841,7 +840,7 @@ function closeDeleteShiftModal() {
         const select = document.getElementById('delete-shift-select');
         if (modal) modal.classList.add('hidden');
         if (select) select.value = '';
-        console.log('Closed delete shift modal');
+        console.log('Closed delete shift modal'); // Debug
     } catch (e) {
         console.error('Error in closeDeleteShiftModal:', e);
     }
@@ -870,7 +869,7 @@ function deleteShift() {
         renderShiftSelector();
         renderCalendar();
         updateWorkedHoursAndSummary();
-        console.log(`Shift deleted: ${shiftName}`);
+        console.log(`Shift deleted: ${shiftName}`); // Debug
     } catch (e) {
         console.error('Error in deleteShift:', e);
     }
@@ -889,7 +888,7 @@ function saveNote() {
             }
             closeNoteModal();
             renderCalendar();
-            console.log(`Saved note: ${currentNoteKey}`);
+            console.log(`Saved note: ${currentNoteKey}`); // Debug
         }
     } catch (e) {
         console.error('Error in saveNote:', e);
@@ -920,7 +919,7 @@ function openNoteModal(year, month, day) {
         if (modal) {
             modal.classList.remove('hidden');
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
-            console.log(`Opened note modal for ${currentNoteKey}`);
+            console.log(`Opened note modal for ${currentNoteKey}`); // Debug
         }
     } catch (e) {
         console.error('Error in openNoteModal:', e);
@@ -934,7 +933,7 @@ function closeNoteModal() {
         if (modal) modal.classList.add('hidden');
         if (noteText) noteText.value = '';
         currentNoteKey = null;
-        console.log('Closed note modal');
+        console.log('Closed note modal'); // Debug
     } catch (e) {
         console.error('Error in closeNoteModal:', e);
     }
@@ -951,17 +950,17 @@ function renderShiftSelector() {
                 const shiftOption = document.createElement('div');
                 shiftOption.className = `shift-option ${selectedShift === shiftKey ? 'selected-shift' : ''} ${getTextLengthClass(shift.name)}`;
                 shiftOption.style.backgroundColor = shift.color;
-                shiftOption.style.color = isDarkColor(shift.color) ? '#ffffff' : '#1e3a8a';
+                shiftOption.style.color = isDarkColor(shift.color) ? '#ffffff' : '#000000';
                 shiftOption.textContent = shift.name;
                 shiftOption.title = `${shift.name} (${shift.abbreviation}, ${decimalToTime(shift.hours)})`;
                 shiftOption.addEventListener('click', () => {
                     selectedShift = shiftKey;
                     renderShiftSelector();
-                    console.log(`Selected shift: ${shiftKey}`);
+                    console.log(`Selected shift: ${shiftKey}`); // Debug
                 });
                 shiftSelector.appendChild(shiftOption);
             });
-            console.log('Rendered shift selector');
+            console.log('Rendered shift selector'); // Debug
         }
     } catch (e) {
         console.error('Error in renderShiftSelector:', e);
@@ -972,7 +971,7 @@ function clearShift() {
     try {
         selectedShift = null;
         renderShiftSelector();
-        console.log('Cleared selected shift');
+        console.log('Cleared selected shift'); // Debug
     } catch (e) {
         console.error('Error in clearShift:', e);
     }
@@ -1022,6 +1021,7 @@ function renderCalendar() {
             dayNumber.textContent = day;
             cell.appendChild(dayNumber);
 
+            // Aggiungi il pulsante per le note in ogni cella
             const noteButton = document.createElement('button');
             noteButton.className = 'note-edit-btn';
             noteButton.innerHTML = '<i class="fas fa-edit"></i>';
@@ -1044,7 +1044,7 @@ function renderCalendar() {
                         shiftBadge.textContent = shifts[shiftName].abbreviation;
                         shiftBadge.title = `${shifts[shiftName].name} (${decimalToTime(shifts[shiftName].hours)})`;
                         shiftBadge.style.backgroundColor = shifts[shiftName].color;
-                        shiftBadge.style.color = isDarkColor(shifts[shiftName].color) ? '#ffffff' : '#1e3a8a';
+                        shiftBadge.style.color = isDarkColor(shifts[shiftName].color) ? '#ffffff' : '#000000';
                         shiftsContainer.appendChild(shiftBadge);
                     }
                 });
@@ -1068,7 +1068,7 @@ function renderCalendar() {
                             saveShift(shiftKey, currentShifts);
                             renderCalendar();
                             updateWorkedHoursAndSummary();
-                            console.log(`Added shift ${selectedShift} to ${shiftKey}`);
+                            console.log(`Added shift ${selectedShift} to ${shiftKey}`); // Debug
                         } else {
                             alert('alertMaxShifts');
                         }
@@ -1077,7 +1077,7 @@ function renderCalendar() {
                         saveShift(shiftKey, currentShifts);
                         renderCalendar();
                         updateWorkedHoursAndSummary();
-                        console.log(`Removed shift ${selectedShift} from ${shiftKey}`);
+                        console.log(`Removed shift ${selectedShift} from ${shiftKey}`); // Debug
                     }
                 }
             });
@@ -1094,7 +1094,7 @@ function renderCalendar() {
 
             calendar.appendChild(cell);
         }
-        console.log(`Rendered calendar for ${translations[lang].monthNames[currentMonth]} ${currentYear}`);
+        console.log(`Rendered calendar for ${translations[lang].monthNames[currentMonth]} ${currentYear}`); // Debug
     } catch (e) {
         console.error('Error in renderCalendar:', e);
     }
@@ -1109,7 +1109,7 @@ function prevMonth() {
         }
         renderCalendar();
         updateWorkedHoursAndSummary();
-        console.log(`Navigated to previous month: ${currentMonth + 1}/${currentYear}`);
+        console.log(`Navigated to previous month: ${currentMonth + 1}/${currentYear}`); // Debug
     } catch (e) {
         console.error('Error in prevMonth:', e);
     }
@@ -1124,7 +1124,7 @@ function nextMonth() {
         }
         renderCalendar();
         updateWorkedHoursAndSummary();
-        console.log(`Navigated to next month: ${currentMonth + 1}/${currentYear}`);
+        console.log(`Navigated to next month: ${currentMonth + 1}/${currentYear}`); // Debug
     } catch (e) {
         console.error('Error in nextMonth:', e);
     }
@@ -1142,7 +1142,7 @@ function showMonthlyView() {
             annualView.style.display = 'none';
             renderCalendar();
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
-            console.log('Showed monthly view');
+            console.log('Showed monthly view'); // Debug
         } else {
             console.error('One or more view elements not found');
         }
@@ -1162,7 +1162,7 @@ function showStatsPage() {
             annualView.style.display = 'none';
             updateWorkedHoursAndSummary();
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
-            console.log('Showed stats page');
+            console.log('Showed stats page'); // Debug
         } else {
             console.error('One or more view elements not found');
         }
@@ -1183,7 +1183,7 @@ function showAnnualView() {
             renderAnnualCalendar();
             updateAnnualStats();
             updateTranslations(localStorage.getItem('selectedLanguage') || 'it');
-            console.log('Showed annual view');
+            console.log('Showed annual view'); // Debug
         } else {
             console.error('One or more view elements not found');
         }
@@ -1215,7 +1215,7 @@ function updateWorkedHoursAndSummary() {
                 if (shifts[shiftName]) {
                     totalHours += shifts[shiftName].hours;
                     shiftCounts[shiftName] = (shiftCounts[shiftName] || 0) + 1;
-                    console.log(`Day ${day}: Shift ${shiftName}, Hours: ${shifts[shiftName].hours.toFixed(4)}`);
+                    console.log(`Day ${day}: Shift ${shiftName}, Hours: ${shifts[shiftName].hours.toFixed(4)}`); // Debug
                 }
             });
 
@@ -1227,7 +1227,7 @@ function updateWorkedHoursAndSummary() {
         }
 
         const formattedHours = decimalToTime(totalHours);
-        console.log(`Total hours: ${totalHours.toFixed(4)} -> ${formattedHours}`);
+        console.log(`Total hours: ${totalHours.toFixed(4)} -> ${formattedHours}`); // Debug
         workedHoursElement.textContent = formattedHours;
 
         shiftsDetailsElement.innerHTML = '';
@@ -1269,7 +1269,7 @@ function updateWorkedHoursAndSummary() {
                 notesListElement.appendChild(noteItem);
             });
         }
-        console.log('Updated worked hours and summary');
+        console.log('Updated worked hours and summary'); // Debug
     } catch (e) {
         console.error('Error in updateWorkedHoursAndSummary:', e);
     }
@@ -1302,7 +1302,7 @@ function updateAnnualStats() {
         }
 
         const formattedHours = decimalToTime(totalHours);
-        console.log(`Annual total hours: ${totalHours.toFixed(4)} -> ${formattedHours}`);
+        console.log(`Annual total hours: ${totalHours.toFixed(4)} -> ${formattedHours}`); // Debug
         annualHoursElement.textContent = formattedHours;
 
         annualShiftsDetailsElement.innerHTML = '';
@@ -1329,7 +1329,7 @@ function updateAnnualStats() {
                 }
             });
         }
-        console.log('Updated annual stats');
+        console.log('Updated annual stats'); // Debug
     } catch (e) {
         console.error('Error in updateAnnualStats:', e);
     }
@@ -1398,7 +1398,7 @@ function renderAnnualCalendar() {
                     cell.classList.add(getTextLengthClass(combinedText));
                     if (shifts[shiftNames[0]]) {
                         cell.style.backgroundColor = shifts[shiftNames[0]].color;
-                        cell.style.color = isDarkColor(shifts[shiftNames[0]].color) ? '#ffffff' : '#1e3a8a';
+                        cell.style.color = isDarkColor(shifts[shiftNames[0]].color) ? '#ffffff' : '#000000';
                     }
                 } else {
                     cell.textContent = day;
@@ -1410,7 +1410,7 @@ function renderAnnualCalendar() {
             monthDiv.appendChild(gridDiv);
             annualContainer.appendChild(monthDiv);
         }
-        console.log(`Rendered annual calendar for ${currentYear}`);
+        console.log(`Rendered annual calendar for ${currentYear}`); // Debug
     } catch (e) {
         console.error('Error in renderAnnualCalendar:', e);
     }
@@ -1420,11 +1420,6 @@ function renderAnnualCalendar() {
 document.addEventListener('DOMContentLoaded', () => {
     try {
         console.log('DOM content loaded, initializing app');
-        // Forza il tema chiaro come predefinito se non specificato
-        if (!localStorage.getItem('theme')) {
-            localStorage.setItem('theme', 'light');
-            document.body.classList.remove('dark-mode');
-        }
         initializeLanguageSelector();
         initializeHamburgerMenu();
         initializeThemeToggle();
