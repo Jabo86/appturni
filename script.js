@@ -71,7 +71,7 @@ const translations = {
         noteTimeLabel: "Orario Notifica",
         noteTimePlaceholder: "Seleziona orario (es. 07:00)",
         alertInvalidNameHours: "Inserisci un nome valido e un orario valido (es. 07:15).",
-        alertInvalidHours: "Inserisci un orario valido nel formato HH:MM.",
+        alertInvalidHours: "Inserisci un orario valido nel formato HH:MM (es. 07:15 o 00:00 per un giorno di riposo).",
         alertShiftExists: "Esiste già un turno con questo nome.",
         alertSelectShiftToEdit: "Seleziona un turno da modificare.",
         alertSelectShiftToDelete: "Seleziona un turno da eliminare.",
@@ -134,7 +134,7 @@ const translations = {
         noteTimeLabel: "Notification Time",
         noteTimePlaceholder: "Select time (e.g. 07:00)",
         alertInvalidNameHours: "Enter a valid name and valid hours (e.g. 07:15).",
-        alertInvalidHours: "Enter a valid time in the format HH:MM.",
+        alertInvalidHours: "Enter a valid time in the format HH:MM (e.g., 07:15 or 00:00 for a rest day).",
         alertShiftExists: "A shift with this name already exists.",
         alertSelectShiftToEdit: "Select a shift to edit.",
         alertSelectShiftToDelete: "Select a shift to delete.",
@@ -197,7 +197,7 @@ const translations = {
         noteTimeLabel: "Hora de Notificación",
         noteTimePlaceholder: "Selecciona la hora (ej. 07:00)",
         alertInvalidNameHours: "Ingresa un nombre válido y una hora válida (ej. 07:15).",
-        alertInvalidHours: "Ingresa una hora válida en el formato HH:MM.",
+        alertInvalidHours: "Ingresa una hora válida en el formato HH:MM (ej. 07:15 o 00:00 para un día de descanso).",
         alertShiftExists: "Ya existe un turno con este nombre.",
         alertSelectShiftToEdit: "Selecciona un turno para editar.",
         alertSelectShiftToDelete: "Selecciona un turno para eliminar.",
@@ -260,7 +260,7 @@ const translations = {
         noteTimeLabel: "Benachrichtigungszeit",
         noteTimePlaceholder: "Zeit auswählen (z.B. 07:00)",
         alertInvalidNameHours: "Gib einen gültigen Namen und gültige Stunden ein (z.B. 07:15).",
-        alertInvalidHours: "Gib eine gültige Zeit im Format HH:MM ein.",
+        alertInvalidHours: "Gib eine gültige Zeit im Format HH:MM ein (z.B. 07:15 oder 00:00 für einen Ruhetag).",
         alertShiftExists: "Eine Schicht mit diesem Namen existiert bereits.",
         alertSelectShiftToEdit: "Wähle eine Schicht zum Bearbeiten aus.",
         alertSelectShiftToDelete: "Wähle eine Schicht zum Löschen aus.",
@@ -323,7 +323,7 @@ const translations = {
         noteTimeLabel: "Heure de notification",
         noteTimePlaceholder: "Sélectionnez l'heure (ex. 07:00)",
         alertInvalidNameHours: "Entrez un nom valide et des heures valides (ex. 07:15).",
-        alertInvalidHours: "Entrez une heure valide au format HH:MM.",
+        alertInvalidHours: "Entrez une heure valide au format HH:MM (ex. 07:15 ou 00:00 pour un jour de repos).",
         alertShiftExists: "Une équipe avec ce nom existe déjà.",
         alertSelectShiftToEdit: "Sélectionnez une équipe à modifier.",
         alertSelectShiftToDelete: "Sélectionnez une équipe à supprimer.",
@@ -625,20 +625,26 @@ function createShift() {
         const shiftAbbr = document.getElementById('shift-abbr-input')?.value?.trim().toUpperCase() || shiftName;
         const shiftHoursInput = document.getElementById('shift-hours-input')?.value?.trim() || '';
         const shiftColor = document.getElementById('shift-color-input')?.value || '#fef3c7';
-        if (!shiftName || !shiftHoursInput) {
+
+        if (!shiftName) {
             alert('alertInvalidNameHours');
             return;
         }
-        const shiftHours = timeToDecimal(shiftHoursInput);
-        console.log(`Creating shift: ${shiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
-        if (isNaN(shiftHours) || shiftHours === 0) {
+
+        const timeFormatRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        if (!timeFormatRegex.test(shiftHoursInput) && shiftHoursInput !== '00:00') {
             alert('alertInvalidHours');
             return;
         }
+
+        const shiftHours = timeToDecimal(shiftHoursInput);
+        console.log(`Creating shift: ${shiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
+
         if (shifts[shiftName]) {
             alert('alertShiftExists');
             return;
         }
+
         shifts[shiftName] = {
             name: shiftName,
             abbreviation: shiftAbbr,
@@ -759,26 +765,33 @@ function updateShift() {
         const shiftAbbr = document.getElementById('edit-shift-abbr')?.value?.trim().toUpperCase() || newShiftName;
         const shiftHoursInput = document.getElementById('edit-shift-hours')?.value?.trim() || '';
         const shiftColor = document.getElementById('edit-shift-color')?.value || '#fef3c7';
-        if (!newShiftName || !shiftHoursInput) {
+
+        if (!newShiftName) {
             alert('alertInvalidNameHours');
             return;
         }
-        const shiftHours = timeToDecimal(shiftHoursInput);
-        console.log(`Updating shift: ${oldShiftName} -> ${newShiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
-        if (isNaN(shiftHours) || shiftHours === 0) {
+
+        const timeFormatRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        if (!timeFormatRegex.test(shiftHoursInput) && shiftHoursInput !== '00:00') {
             alert('alertInvalidHours');
             return;
         }
+
+        const shiftHours = timeToDecimal(shiftHoursInput);
+        console.log(`Updating shift: ${oldShiftName} -> ${newShiftName}, Hours: ${shiftHoursInput} -> ${shiftHours.toFixed(4)}`); // Debug
+
         if (newShiftName !== oldShiftName && shifts[newShiftName]) {
             alert('alertShiftExists');
             return;
         }
+
         const updatedShift = {
             name: newShiftName,
             abbreviation: shiftAbbr,
             hours: shiftHours,
             color: shiftColor
         };
+
         if (newShiftName !== oldShiftName) {
             delete shifts[oldShiftName];
             shifts[newShiftName] = updatedShift;
@@ -795,6 +808,7 @@ function updateShift() {
         } else {
             shifts[oldShiftName] = updatedShift;
         }
+
         saveCustomShifts();
         closeEditShiftModal();
         renderShiftSelector();
